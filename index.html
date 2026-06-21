@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HackTribe Controller</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00cc66;
+            --primary-dark: #00a855;
+            --bg: #0a0a0f;
+            --surface: #16162a;
+            --border: #2a2a4a;
+            --fg: #e0e0e0;
+            --fg-muted: #888;
+            --font-headline: 'Space Grotesk', system-ui, sans-serif;
+            --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: var(--font-body);
+            background: var(--bg); 
+            color: var(--fg); 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .logo { font-size: 3rem; margin-bottom: 0.5rem; }
+        h1 { 
+            font-family: var(--font-headline);
+            font-size: 2.8rem; 
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #00cc66, #00aaff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { 
+            color: var(--fg-muted); 
+            margin-bottom: 3rem; 
+            font-size: 1.1rem;
+            text-align: center;
+            max-width: 500px;
+            line-height: 1.6;
+        }
+        .cards { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            width: 260px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+        }
+        .card:hover { 
+            border-color: var(--primary); 
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,204,102,0.15);
+        }
+        .card-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+        .card h2 { 
+            font-family: var(--font-headline);
+            font-size: 1.2rem; 
+            margin-bottom: 0.5rem; 
+            color: #fff; 
+        }
+        .card p { color: var(--fg-muted); font-size: 0.85rem; line-height: 1.5; }
+        .tag {
+            display: inline-block;
+            background: rgba(0,204,102,0.12);
+            color: var(--primary);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .tag-blue {
+            background: rgba(59,130,246,0.12);
+            color: #3b82f6;
+        }
+        .tag-purple {
+            background: rgba(168,85,247,0.12);
+            color: #a855f7;
+        }
+        footer {
+            margin-top: 3rem;
+            color: var(--fg-muted);
+            font-size: 0.8rem;
+            text-align: center;
+        }
+        footer a { color: var(--primary); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="logo">🎛️</div>
+    <h1>HackTribe Controller</h1>
+    <p class="subtitle">Controlador web para el Korg Electribe E2-E2s-Hacktribe. Secuenciador, generador de estilos, arpegiador y más.</p>
+    <div class="cards">
+        <a class="card" href="DESKTOP.html">
+            <div class="card-icon">🖥️</div>
+            <h2>Escritorio</h2>
+            <p>Versión completa con todas las herramientas: piano roll, draw, fold, ghost notes, velocity lane, zoom, y más.</p>
+            <span class="tag">Web App</span>
+        </a>
+        <a class="card" href="MOBILE.html">
+            <div class="card-icon">📱</div>
+            <h2>Móvil</h2>
+            <p>Optimizada para tablets y smartphones. Gestos táctiles, auto-scroll, y pantalla completa.</p>
+            <span class="tag tag-blue">Mobile</span>
+        </a>
+        <a class="card" href="MANUAL.pdf">
+            <div class="card-icon">📖</div>
+            <h2>Manual</h2>
+            <p>Documentación completa con capturas de pantalla, guías de uso y referencias.</p>
+            <span class="tag tag-purple">PDF</span>
+        </a>
+    </div>
+    <footer>
+        <p>Creado por <a href="https://github.com/gallegherplus">gallegherplus</a></p>
+    </footer>
+</body>
+</html>
