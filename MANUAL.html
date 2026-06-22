@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HackTribe Controller — Manual de Usuario</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #09090b;
+  --surface: #111114;
+  --surface-2: #18181b;
+  --surface-3: #1f1f23;
+  --border: rgba(255,255,255,0.06);
+  --border-2: rgba(255,255,255,0.10);
+  --border-3: rgba(255,255,255,0.14);
+  --text: #f0ece4;
+  --text-2: #a1a1aa;
+  --text-3: #636370;
+  --orange: #ff8c00;
+  --aqua: #00c9a0;
+  --red: #ff3050;
+  --yellow: #ffb830;
+  --blue: #4f9eff;
+  --purple: #a78bfa;
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'SF Mono','Menlo','Consolas', ui-monospace, monospace;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 9999px;
+}
+
+@page { size: A4; margin: 1.4cm 1.2cm; }
+
+@media print {
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  html, body { background: var(--bg) !important; }
+  body { padding: 0 !important; max-width: none !important; width: 100% !important; }
+  .mobile-strip, .rack-side, .bg-grid, .cover-eq, .no-print { display: none !important; }
+  .layout { width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+  .page-break { page-break-before: always; break-before: page; }
+  .no-break { page-break-inside: avoid; break-inside: avoid; }
+  .cover-section { page-break-after: always; break-after: page; min-height: auto !important; padding: 60px 0 40px !important; }
+  .section-box, .callout, table, .feature-card, .card, .rack-strip { page-break-inside: avoid !important; break-inside: avoid !important; }
+  .callout-tip { background: rgba(0,201,160,.07) !important; border-left: 3px solid var(--aqua) !important; }
+  .callout-warning { background: rgba(255,184,48,.07) !important; border-left: 3px solid var(--yellow) !important; }
+  .callout-danger { background: rgba(255,48,80,.07) !important; border-left: 3px solid var(--red) !important; }
+  .callout-info { background: rgba(79,158,255,.07) !important; border-left: 3px solid var(--blue) !important; }
+  th { background: var(--surface-2) !important; }
+  .section-box, .feature-card { background: var(--surface) !important; }
+  .badge-green { background: rgba(0,201,160,.12) !important; }
+  .badge-pink { background: rgba(236,72,153,.12) !important; }
+  .badge-blue { background: rgba(79,158,255,.12) !important; }
+  .badge-orange { background: rgba(255,140,0,.12) !important; }
+  .badge-red { background: rgba(255,48,80,.12) !important; }
+  .badge-purple { background: rgba(167,139,250,.12) !important; }
+  kbd, code { background: var(--surface-2) !important; }
+  .rack-strip { background: var(--surface) !important; border-color: var(--border-2) !important; }
+  .rack-strip .rs-mod { background: var(--surface-2) !important; border-color: var(--border-2) !important; }
+  .rack-strip .rs-knob { background: var(--surface-3) !important; }
+  .rack-strip .rs-pad { opacity: 0.85 !important; }
+  .rack-strip .rs-bar { opacity: 0.8 !important; }
+  .rack-strip .rs-led { opacity: 0.9 !important; }
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { min-height: 100%; }
+
+body {
+  font-family: var(--font);
+  font-size: 10.5pt;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+a { color: var(--aqua); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.bg-grid {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.016) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.016) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at 50% 30%, black 20%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 30%, black 20%, transparent 70%);
+}
+
+/* ══════ MOBILE STRIP ══════ */
+.mobile-strip {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50; overflow: hidden;
+  background: rgba(9,9,11,.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border); padding: 7px 0;
+}
+.scroll-inner { display: flex; width: max-content; animation: marquee 32s linear infinite; }
+.strip-group { display: flex; align-items: center; gap: 10px; padding: 0 6px; }
+
+/* ══════ RACKS ══════ */
+.rack-side {
+  position: fixed; top: 0; bottom: 0; width: 110px;
+  background: rgba(9,9,11,.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  z-index: 2; display: none; flex-direction: column; align-items: center; justify-content: center;
+  gap: 14px; padding: 20px 8px; pointer-events: none;
+}
+.rack-side.left { left: 0; border-right: 1px solid var(--border); }
+.rack-side.right { right: 0; border-left: 1px solid var(--border); }
+
+/* ══════ MODULES (sidebar/strip) ══════ */
+.mod { flex-shrink: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; position: relative; }
+.rack-side .mod { animation: modFloat 8s ease-in-out infinite; }
+.rack-side .mod:nth-child(2){animation-delay:1.2s}.rack-side .mod:nth-child(3){animation-delay:2.4s}.rack-side .mod:nth-child(4){animation-delay:3.6s}
+
+.mod-spk{width:88px;height:130px;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;padding:8px}
+.spk-tw{width:20px;height:20px;border-radius:50%;background:var(--bg);border:1.5px solid rgba(255,255,255,.06)}
+.spk-wf{width:50px;height:50px;border-radius:50%;background:var(--bg);border:1.5px solid rgba(255,255,255,.06);display:grid;place-items:center}
+.spk-wf i{display:block;width:28px;height:28px;border-radius:50%;background:var(--surface-2);animation:spkPulse 2s ease-in-out infinite}
+.spk-slot{width:42px;height:7px;border-radius:var(--radius-pill);background:var(--bg);border:1px solid rgba(255,255,255,.04)}
+.led{width:7px;height:7px;border-radius:50%;animation:ledPulse 2.2s infinite}
+.led-g{background:var(--aqua);box-shadow:0 0 8px rgba(0,201,160,.5)}
+.led-r{background:var(--red);box-shadow:0 0 8px rgba(255,48,80,.5)}
+.led-o{background:var(--orange);box-shadow:0 0 8px rgba(255,140,0,.5)}
+
+.mod-knobs{width:88px;height:72px;padding:8px 6px 6px;display:flex;flex-direction:column;justify-content:space-between}
+.knobs-row{display:flex;justify-content:space-between}
+.knob{width:22px;height:22px;border-radius:50%;background:var(--surface-2);position:relative}
+.knob::after{content:"";position:absolute;left:50%;bottom:50%;width:1.5px;height:7px;border-radius:var(--radius-pill);transform:translateX(-50%);transform-origin:50% 100%;animation:knobRot 3.5s ease-in-out infinite alternate}
+.knob:nth-child(2)::after{animation-delay:.6s}.knob:nth-child(3)::after{animation-delay:1.2s}
+.knob.ko{border:1.5px solid var(--orange)}.knob.ko::after{background:var(--orange)}
+.knob.ka{border:1.5px solid var(--aqua)}.knob.ka::after{background:var(--aqua)}
+.knob.kr{border:1.5px solid var(--red)}.knob.kr::after{background:var(--red)}
+.knob-lbl{display:flex;justify-content:space-between;font-size:6px;letter-spacing:.12em;text-transform:uppercase}
+.knob-lbl span:nth-child(1){color:var(--orange)}.knob-lbl span:nth-child(2){color:var(--aqua)}.knob-lbl span:nth-child(3){color:var(--red)}
+
+.mod-vu{width:72px;height:110px;padding:6px 8px;display:flex;flex-direction:column}
+.vu-title{font-size:6px;text-align:center;color:var(--text-3);letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px}
+.vu-cols{flex:1;display:flex;justify-content:center;gap:12px;align-items:flex-end;padding-bottom:6px}
+.vu-c{width:12px;display:flex;flex-direction:column-reverse;gap:3px}
+.vu-c b{display:block;width:100%;border-radius:2px;opacity:.2;animation:vuPop var(--d,.7s) ease-in-out infinite}
+.vu-c b:nth-child(1){animation-delay:.05s}.vu-c b:nth-child(2){animation-delay:.12s}.vu-c b:nth-child(3){animation-delay:.2s}.vu-c b:nth-child(4){animation-delay:.28s}.vu-c b:nth-child(5){animation-delay:.36s}
+.vu-g{background:var(--aqua);height:12px}.vu-g2{background:var(--aqua);height:12px}.vu-y{background:var(--yellow);height:12px}.vu-o{background:var(--orange);height:10px}.vu-r{background:var(--red);height:8px}
+.vu-lr{display:flex;justify-content:center;gap:20px;font-size:8px;font-weight:700}
+.vu-lr span:first-child{color:var(--aqua)}.vu-lr span:last-child{color:var(--orange)}
+
+.mod-pads{width:88px;height:86px;padding:6px;display:flex;flex-direction:column;gap:5px}
+.pad-display{height:16px;border-radius:var(--radius-sm);background:var(--bg);border:1px solid var(--border);display:grid;place-items:center;font-size:7px;font-weight:700;color:var(--aqua);letter-spacing:.14em}
+.pad-g{flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.pad-g s{display:block;text-decoration:none;border-radius:4px;animation:padBlink 1.8s infinite}
+.pad-g s:nth-child(1){background:var(--red)}.pad-g s:nth-child(2){background:var(--orange);animation-delay:.2s}.pad-g s:nth-child(3){background:var(--yellow);animation-delay:.4s}.pad-g s:nth-child(4){background:var(--aqua);animation-delay:.6s}.pad-g s:nth-child(5){background:var(--aqua);animation-delay:.8s}.pad-g s:nth-child(6){background:var(--yellow);animation-delay:1s}.pad-g s:nth-child(7){background:var(--orange);animation-delay:1.2s}.pad-g s:nth-child(8){background:var(--red);animation-delay:1.4s}
+
+.mod-faders{width:88px;height:80px;padding:6px 5px;display:flex;flex-direction:column;gap:4px}
+.fader-row{flex:1;display:flex;gap:3px}
+.fdr{flex:1;position:relative;display:flex;justify-content:center}
+.fdr-track{width:3px;height:80%;border-radius:var(--radius-pill);background:var(--bg);align-self:center}
+.fdr-handle{position:absolute;width:72%;height:16%;border-radius:4px;animation:faderSlide 2.4s ease-in-out infinite alternate}
+.fdr:nth-child(2) .fdr-handle{animation-delay:.3s}.fdr:nth-child(3) .fdr-handle{animation-delay:.6s}.fdr:nth-child(4) .fdr-handle{animation-delay:.9s}.fdr:nth-child(5) .fdr-handle{animation-delay:1.2s}
+.fdr-handle.ha{background:var(--aqua)}.fdr-handle.hy{background:var(--yellow)}.fdr-handle.ho{background:var(--orange)}.fdr-handle.hr{background:var(--red)}
+.fdr-lbl{display:flex;justify-content:space-between;font-size:6px;color:var(--text-3);padding:0 1px}
+
+/* ══════════════════════════════════════
+   RACK STRIP — DECORACIONES ENTRE PÁGINAS
+   ══════════════════════════════════════ */
+.rack-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 16px;
+  margin: 8px 0;
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  page-break-inside: avoid;
+}
+
+.rack-strip .rs-mod {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* Knobs inline */
+.rs-knobs {
+  padding: 8px 10px;
+  gap: 6px;
+  display: flex;
+}
+
+.rs-knob {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--surface-3);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.rs-knob::after {
+  content: "";
+  position: absolute;
+  left: 50%; bottom: 50%;
+  width: 1.5px; height: 6px;
+  border-radius: var(--radius-pill);
+  transform: translateX(-50%);
+  transform-origin: 50% 100%;
+}
+
+.rs-knob.ko { border: 1.5px solid var(--orange); }
+.rs-knob.ko::after { background: var(--orange); }
+.rs-knob.ka { border: 1.5px solid var(--aqua); }
+.rs-knob.ka::after { background: var(--aqua); }
+.rs-knob.kr { border: 1.5px solid var(--red); }
+.rs-knob.kr::after { background: var(--red); }
+.rs-knob.ky { border: 1.5px solid var(--yellow); }
+.rs-knob.ky::after { background: var(--yellow); }
+.rs-knob.kb { border: 1.5px solid var(--blue); }
+.rs-knob.kb::after { background: var(--blue); }
+.rs-knob.kp { border: 1.5px solid var(--purple); }
+.rs-knob.kp::after { background: var(--purple); }
+
+/* Pads inline */
+.rs-pads {
+  padding: 8px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+}
+
+.rs-pad {
+  width: 12px; height: 12px;
+  border-radius: 3px;
+}
+
+/* VU bars inline */
+.rs-vu {
+  padding: 8px 10px;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 42px;
+}
+
+.rs-bar {
+  width: 6px;
+  border-radius: 2px 2px 0 0;
+}
+
+/* Faders inline */
+.rs-faders {
+  padding: 8px 6px;
+  display: flex;
+  gap: 4px;
+  height: 42px;
+  align-items: stretch;
+}
+
+.rs-fdr {
+  width: 8px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.rs-fdr-track {
+  width: 2px;
+  height: 100%;
+  background: var(--bg);
+  border-radius: var(--radius-pill);
+}
+
+.rs-fdr-handle {
+  position: absolute;
+  width: 100%;
+  height: 6px;
+  border-radius: 2px;
+}
+
+/* LEDs inline */
+.rs-led {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.rs-led.lg { background: var(--aqua); box-shadow: 0 0 6px rgba(0,201,160,.5); }
+.rs-led.lr { background: var(--red); box-shadow: 0 0 6px rgba(255,48,80,.5); }
+.rs-led.lo { background: var(--orange); box-shadow: 0 0 6px rgba(255,140,0,.5); }
+.rs-led.ly { background: var(--yellow); box-shadow: 0 0 6px rgba(255,184,48,.5); }
+
+/* Speaker inline */
+.rs-speaker {
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rs-spk-cone {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1.5px solid rgba(255,255,255,.06);
+  display: grid;
+  place-items: center;
+}
+
+.rs-spk-cone i {
+  display: block;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--surface-3);
+}
+
+.rs-spk-tw {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid rgba(255,255,255,.06);
+}
+
+/* Label */
+.rs-label {
+  font-size: 6px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  white-space: nowrap;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+
+.rs-label.lc-o { color: var(--orange); }
+.rs-label.lc-a { color: var(--aqua); }
+.rs-label.lc-r { color: var(--red); }
+.rs-label.lc-y { color: var(--yellow); }
+
+/* Separator line within strip */
+.rs-sep {
+  width: 1px;
+  height: 28px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+/* ══════ LAYOUT ══════ */
+.layout {
+  position: relative; z-index: 5;
+  width: min(860px, calc(100% - 24px));
+  margin: 0 auto;
+  padding: 88px 0 60px;
+}
+
+/* ══════ COVER ══════ */
+.cover-section {
+  text-align: center; padding: 80px 0 60px; min-height: 90vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.cover-icon { font-size: 72pt; margin-bottom: 28px; filter: drop-shadow(0 0 24px rgba(0,201,160,.25)); }
+.cover-eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: var(--radius-pill); border: 1px solid var(--border-2); background: var(--surface); font-size: .72rem; font-weight: 600; color: var(--text-2); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 28px; }
+.cover-eyebrow .pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--aqua); }
+.cover-title { font-size: clamp(2.8rem,7vw,5.2rem); font-weight: 800; letter-spacing: -.06em; line-height: .92; color: var(--text); margin-bottom: 16px; }
+.cover-title em { font-style: normal; background: linear-gradient(90deg,var(--orange),var(--aqua),var(--red)); background-size: 200% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.cover-subtitle { font-size: 1.05rem; font-weight: 500; color: var(--aqua); margin-bottom: 32px; letter-spacing: .04em; }
+.cover-tagline { font-size: 1rem; color: var(--text-2); max-width: 520px; margin: 0 auto 40px; line-height: 1.75; }
+.cover-eq { display: flex; justify-content: center; align-items: flex-end; gap: 5px; height: 36px; margin-bottom: 36px; }
+.cover-eq i { display: block; width: 5px; border-radius: var(--radius-pill) var(--radius-pill) 1px 1px; transform-origin: bottom; animation: eqBounce var(--d,.5s) ease-in-out infinite alternate; }
+.cover-eq i:nth-child(1){background:var(--aqua)}.cover-eq i:nth-child(2){background:var(--aqua)}.cover-eq i:nth-child(3){background:var(--yellow)}.cover-eq i:nth-child(4){background:var(--orange)}.cover-eq i:nth-child(5){background:var(--red)}.cover-eq i:nth-child(6){background:var(--red)}
+.cover-meta { display: flex; gap: 40px; justify-content: center; margin-bottom: 40px; }
+.cover-meta-item { text-align: center; }
+.cover-meta-value { font-size: 2rem; font-weight: 800; letter-spacing: -.04em; display: block; color: var(--aqua); }
+.cover-meta-label { font-size: .68rem; color: var(--text-3); text-transform: uppercase; letter-spacing: .1em; font-weight: 600; margin-top: 4px; }
+.cover-divider { width: 64px; height: 2px; background: linear-gradient(90deg,var(--orange),var(--aqua),var(--red)); border-radius: var(--radius-pill); margin: 0 auto 32px; }
+.cover-footer { font-size: .8rem; color: var(--text-3); line-height: 1.8; }
+
+/* ══════ TOC ══════ */
+.toc-section { padding: 40px 0; }
+.toc-title { font-size: 1.4rem; font-weight: 800; letter-spacing: -.04em; color: var(--text); margin-bottom: 24px; padding-bottom: 14px; border-bottom: 1px solid var(--border-2); display: flex; align-items: center; gap: 12px; }
+.toc-title::before { content: ""; display: block; width: 4px; height: 1.4rem; border-radius: var(--radius-pill); background: linear-gradient(180deg,var(--orange),var(--aqua)); flex-shrink: 0; }
+.toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 24px; }
+.toc-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: .9rem; }
+.toc-num { font-family: var(--font-mono); font-size: .72rem; font-weight: 700; color: var(--aqua); min-width: 22px; opacity: .8; }
+.toc-text { color: var(--text-2); }
+
+/* ══════ SECTION HEADERS ══════ */
+.section-header { margin: 56px 0 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border-2); }
+.section-header h2 { font-size: clamp(1.4rem,3vw,1.8rem); font-weight: 800; letter-spacing: -.04em; color: var(--text); display: flex; align-items: center; gap: 14px; }
+.section-header h2::before { content: ""; display: block; width: 4px; height: 1.8rem; border-radius: var(--radius-pill); background: linear-gradient(180deg,var(--orange),var(--aqua)); flex-shrink: 0; }
+.section-header p { font-size: .9rem; color: var(--text-3); margin-top: 6px; padding-left: 18px; }
+h3 { font-size: 1.05rem; font-weight: 700; letter-spacing: -.02em; color: var(--text); margin: 28px 0 12px; }
+h4 { font-size: .9rem; font-weight: 600; color: var(--text-2); margin: 16px 0 8px; }
+p { margin: 8px 0; color: var(--text-2); font-size: .92rem; }
+strong { color: var(--text); }
+
+/* ══════ TABLES ══════ */
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: .88rem; }
+th { background: var(--surface-2); text-align: left; padding: 8px 12px; border: 1px solid var(--border); font-weight: 600; font-size: .72rem; color: var(--text-3); text-transform: uppercase; letter-spacing: .07em; }
+td { padding: 8px 12px; border: 1px solid var(--border); vertical-align: top; color: var(--text-2); font-size: .88rem; }
+tr:nth-child(even) td { background: rgba(255,255,255,.014); }
+
+/* ══════ CALLOUTS ══════ */
+.callout { padding: 12px 16px; margin: 12px 0; border-radius: var(--radius-md); font-size: .88rem; page-break-inside: avoid; border: 1px solid transparent; }
+.callout-tip { background: rgba(0,201,160,.07); border-color: rgba(0,201,160,.18); border-left: 3px solid var(--aqua); }
+.callout-warning { background: rgba(255,184,48,.07); border-color: rgba(255,184,48,.18); border-left: 3px solid var(--yellow); }
+.callout-danger { background: rgba(255,48,80,.07); border-color: rgba(255,48,80,.18); border-left: 3px solid var(--red); }
+.callout-info { background: rgba(79,158,255,.07); border-color: rgba(79,158,255,.18); border-left: 3px solid var(--blue); }
+.callout strong { color: var(--text); font-weight: 600; }
+
+/* ══════ BADGES ══════ */
+.badge { display: inline-block; padding: 2px 8px; border-radius: var(--radius-sm); font-size: .72rem; font-weight: 700; font-family: var(--font-mono); letter-spacing: .04em; }
+.badge-green { background: rgba(0,201,160,.12); color: var(--aqua); border: 1px solid rgba(0,201,160,.22); }
+.badge-pink { background: rgba(236,72,153,.12); color: #f472b6; border: 1px solid rgba(236,72,153,.22); }
+.badge-blue { background: rgba(79,158,255,.12); color: var(--blue); border: 1px solid rgba(79,158,255,.22); }
+.badge-orange { background: rgba(255,140,0,.12); color: var(--orange); border: 1px solid rgba(255,140,0,.22); }
+.badge-red { background: rgba(255,48,80,.12); color: var(--red); border: 1px solid rgba(255,48,80,.22); }
+.badge-purple { background: rgba(167,139,250,.12); color: var(--purple); border: 1px solid rgba(167,139,250,.22); }
+
+kbd { display: inline-block; background: var(--surface-2); border: 1px solid var(--border-3); border-bottom-width: 2px; border-radius: var(--radius-sm); padding: 1px 7px; font-family: var(--font-mono); font-size: .78rem; color: var(--text-2); line-height: 1.5; }
+code { background: var(--surface-2); padding: 1px 6px; border-radius: 4px; font-family: var(--font-mono); font-size: .82rem; color: var(--aqua); border: 1px solid var(--border); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+.section-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; margin: 10px 0; page-break-inside: avoid; }
+.section-box h3, .section-box h4 { margin-top: 0; }
+
+.feature-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 16px 0; }
+.feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 14px; text-align: center; page-break-inside: avoid; }
+.feature-card-icon { font-size: 1.8rem; margin-bottom: 8px; }
+.feature-card-title { font-weight: 700; font-size: .9rem; color: var(--text); margin-bottom: 4px; }
+.feature-card-desc { font-size: .82rem; color: var(--text-3); line-height: 1.5; }
+
+.comparison-table th:first-child { width: 40%; }
+.comparison-table .check { color: var(--aqua); font-weight: 700; text-align: center; }
+.comparison-table .cross { color: var(--red); opacity: .6; font-weight: 700; text-align: center; }
+
+.screenshot-wrap { margin: 20px 0; text-align: center; page-break-inside: avoid; }
+.screenshot-wrap img { max-width: 100%; height: auto; border: 1px solid var(--border); border-radius: var(--radius-lg); }
+.screenshot-caption { font-size: .78rem; color: var(--text-3); margin-top: 8px; font-style: italic; }
+
+ul, ol { margin: 8px 0 8px 20px; }
+li { margin: 4px 0; color: var(--text-2); font-size: .9rem; }
+li strong { color: var(--text); }
+
+.page-footer { text-align: center; color: var(--text-3); font-size: .78rem; margin-top: 64px; padding-top: 18px; border-top: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.page-footer a { color: var(--aqua); font-weight: 600; }
+
+.page-break { page-break-before: always; }
+.no-break { page-break-inside: avoid; }
+
+@media (min-width:1024px) {
+  .mobile-strip{display:none}.rack-side{display:flex}
+  .layout{width:min(860px,calc(100% - 280px));padding-top:40px}
+}
+@media (min-width:1280px) { .rack-side{width:130px} }
+@media (max-width:1023px) { .layout{padding-top:76px} .grid-2,.grid-3{grid-template-columns:1fr} .toc-grid{grid-template-columns:1fr} .feature-grid{grid-template-columns:1fr 1fr} }
+@media (max-width:600px) { .layout{width:calc(100% - 16px)} .cover-meta{gap:24px} .feature-grid{grid-template-columns:1fr} .rack-strip{flex-wrap:wrap} }
+@media (prefers-reduced-motion:reduce) { *,*::before,*::after{animation:none!important;transition:none!important} }
+
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes gradShift{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+@keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(0,201,160,.3)}50%{box-shadow:0 0 0 6px rgba(0,201,160,.02)}}
+@keyframes iconFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes eqBounce{from{height:6px;opacity:.4}to{height:22px;opacity:1}}
+@keyframes ledPulse{0%,100%{opacity:.4;filter:brightness(.8)}50%{opacity:1;filter:brightness(1.4)}}
+@keyframes spkPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+@keyframes knobRot{0%{transform:translateX(-50%) rotate(-40deg)}100%{transform:translateX(-50%) rotate(30deg)}}
+@keyframes vuPop{0%,100%{opacity:.18;transform:scaleY(.7)}45%{opacity:1;transform:scaleY(1.08)}}
+@keyframes padBlink{0%,100%{filter:brightness(.55);transform:scale(1)}50%{filter:brightness(1.25);transform:scale(1.06)}}
+@keyframes faderSlide{0%{top:55%}100%{top:20%}}
+@keyframes modFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+</style>
+</head>
+<body>
+
+<div class="bg-grid no-print"></div>
+
+<!-- MOBILE STRIP -->
+<nav class="mobile-strip no-print" aria-hidden="true">
+  <div class="scroll-inner">
+    <div class="strip-group"><div class="mod mod-spk"><div class="spk-tw"></div><div class="spk-wf"><i></i></div><div class="spk-slot"></div><div class="led led-g"></div></div><div class="mod mod-knobs"><div class="knobs-row"><div class="knob ko"></div><div class="knob ka"></div><div class="knob kr"></div></div><div class="knob-lbl"><span>LOW</span><span>MID</span><span>HI</span></div></div><div class="mod mod-vu"><div class="vu-title">LEVEL</div><div class="vu-cols"><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div></div><div class="vu-lr"><span>L</span><span>R</span></div></div><div class="mod mod-pads"><div class="pad-display">HTB</div><div class="pad-g"><s></s><s></s><s></s><s></s><s></s><s></s><s></s><s></s></div></div><div class="mod mod-faders"><div class="fader-row"><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ha"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ha"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle hy"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ho"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle hr"></div></div></div><div class="fdr-lbl"><span>1</span><span>2</span><span>3</span><span>4</span><span>M</span></div></div></div>
+    <div class="strip-group"><div class="mod mod-spk"><div class="spk-tw"></div><div class="spk-wf"><i></i></div><div class="spk-slot"></div><div class="led led-r"></div></div><div class="mod mod-knobs"><div class="knobs-row"><div class="knob ko"></div><div class="knob ka"></div><div class="knob kr"></div></div><div class="knob-lbl"><span>CUT</span><span>RES</span><span>MOD</span></div></div><div class="mod mod-vu"><div class="vu-title">OUT</div><div class="vu-cols"><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div></div><div class="vu-lr"><span>L</span><span>R</span></div></div><div class="mod mod-pads"><div class="pad-display">E2</div><div class="pad-g"><s></s><s></s><s></s><s></s><s></s><s></s><s></s><s></s></div></div><div class="mod mod-faders"><div class="fader-row"><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ha"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ha"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle hy"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ho"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle hr"></div></div></div><div class="fdr-lbl"><span>A</span><span>B</span><span>C</span><span>D</span><span>X</span></div></div></div>
+    <div class="strip-group"><div class="mod mod-spk"><div class="spk-tw"></div><div class="spk-wf"><i></i></div><div class="spk-slot"></div><div class="led led-o"></div></div><div class="mod mod-knobs"><div class="knobs-row"><div class="knob ko"></div><div class="knob ka"></div><div class="knob kr"></div></div><div class="knob-lbl"><span>LOW</span><span>MID</span><span>HI</span></div></div><div class="mod mod-vu"><div class="vu-title">LEVEL</div><div class="vu-cols"><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div></div><div class="vu-lr"><span>L</span><span>R</span></div></div><div class="mod mod-pads"><div class="pad-display">HTB</div><div class="pad-g"><s></s><s></s><s></s><s></s><s></s><s></s><s></s><s></s></div></div><div class="mod mod-faders"><div class="fader-row"><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ha"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ha"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle hy"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ho"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle hr"></div></div></div><div class="fdr-lbl"><span>1</span><span>2</span><span>3</span><span>4</span><span>M</span></div></div></div>
+    <div class="strip-group"><div class="mod mod-spk"><div class="spk-tw"></div><div class="spk-wf"><i></i></div><div class="spk-slot"></div><div class="led led-g"></div></div><div class="mod mod-knobs"><div class="knobs-row"><div class="knob ko"></div><div class="knob ka"></div><div class="knob kr"></div></div><div class="knob-lbl"><span>CUT</span><span>RES</span><span>MOD</span></div></div><div class="mod mod-vu"><div class="vu-title">OUT</div><div class="vu-cols"><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div></div><div class="vu-lr"><span>L</span><span>R</span></div></div><div class="mod mod-pads"><div class="pad-display">E2</div><div class="pad-g"><s></s><s></s><s></s><s></s><s></s><s></s><s></s><s></s></div></div><div class="mod mod-faders"><div class="fader-row"><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ha"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ha"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle hy"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ho"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle hr"></div></div></div><div class="fdr-lbl"><span>A</span><span>B</span><span>C</span><span>D</span><span>X</span></div></div></div>
+  </div>
+</nav>
+
+<!-- LEFT RACK -->
+<aside class="rack-side left no-print" aria-hidden="true">
+  <div class="mod mod-spk"><div class="spk-tw"></div><div class="spk-wf"><i></i></div><div class="spk-slot"></div><div class="led led-g"></div></div>
+  <div class="mod mod-knobs"><div class="knobs-row"><div class="knob ko"></div><div class="knob ka"></div><div class="knob kr"></div></div><div class="knob-lbl"><span>LOW</span><span>MID</span><span>HI</span></div></div>
+  <div class="mod mod-vu"><div class="vu-title">LEVEL</div><div class="vu-cols"><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div></div><div class="vu-lr"><span>L</span><span>R</span></div></div>
+  <div class="mod mod-pads"><div class="pad-display">HTB</div><div class="pad-g"><s></s><s></s><s></s><s></s><s></s><s></s><s></s><s></s></div></div>
+</aside>
+
+<!-- RIGHT RACK -->
+<aside class="rack-side right no-print" aria-hidden="true">
+  <div class="mod mod-spk"><div class="spk-tw"></div><div class="spk-wf"><i></i></div><div class="spk-slot"></div><div class="led led-r"></div></div>
+  <div class="mod mod-faders"><div class="fader-row"><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ha"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ha"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle hy"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ho"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle hr"></div></div></div><div class="fdr-lbl"><span>1</span><span>2</span><span>3</span><span>4</span><span>M</span></div></div>
+  <div class="mod mod-vu"><div class="vu-title">OUT</div><div class="vu-cols"><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div></div><div class="vu-lr"><span>L</span><span>R</span></div></div>
+  <div class="mod mod-knobs"><div class="knobs-row"><div class="knob ko"></div><div class="knob ka"></div><div class="knob kr"></div></div><div class="knob-lbl"><span>CUT</span><span>RES</span><span>MOD</span></div></div>
+</aside>
+
+<!-- ══════════════════════════════════════ -->
+<!-- CONTENT                                -->
+<!-- ══════════════════════════════════════ -->
+<main class="layout">
+
+<!-- PORTADA -->
+<section class="cover-section">
+  <div class="cover-icon">🎛️</div>
+  <div class="cover-eyebrow"><span class="pulse-dot"></span>Manual de Usuario · v2.0</div>
+  <h1 class="cover-title">HACKTRIBE<br><em>CONTROLLER</em></h1>
+  <p class="cover-subtitle">Manual de Usuario</p>
+  <div class="cover-divider"></div>
+  <p class="cover-tagline">Controlador MIDI completo para KORG Electribe E2/E2s/Hacktribe. 16 partes, generación de patrones, edición avanzada de notas, sistema LFO y presets — todo en un solo archivo HTML.</p>
+  <div class="cover-eq no-print" aria-hidden="true"><i style="--d:.38s"></i><i style="--d:.68s"></i><i style="--d:.48s"></i><i style="--d:.58s"></i><i style="--d:.32s"></i><i style="--d:.78s"></i></div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><span class="cover-meta-value">16</span><span class="cover-meta-label">Partes MIDI</span></div>
+    <div class="cover-meta-item"><span class="cover-meta-value">18</span><span class="cover-meta-label">Estilos</span></div>
+    <div class="cover-meta-item"><span class="cover-meta-value">12</span><span class="cover-meta-label">Herramientas</span></div>
+  </div>
+  <p class="cover-footer">Versión 2.0 — Single-file Web MIDI Application<br>Requiere Chrome, Edge u Opera con Web MIDI habilitado</p>
+</section>
+
+<!-- ══ STRIP A: Knobs + VU + Pads ══ -->
+<div class="rack-strip page-break" aria-hidden="true">
+  <div class="rs-led lg"></div>
+  <div class="rs-mod rs-speaker"><div class="rs-spk-tw"></div><div class="rs-spk-cone"><i></i></div></div>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-knobs"><div class="rs-knob ko"></div><div class="rs-knob ka"></div><div class="rs-knob kr"></div></div>
+  <span class="rs-label">EQ</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-vu"><div class="rs-bar" style="height:60%;background:var(--aqua)"></div><div class="rs-bar" style="height:80%;background:var(--aqua)"></div><div class="rs-bar" style="height:50%;background:var(--yellow)"></div><div class="rs-bar" style="height:35%;background:var(--orange)"></div><div class="rs-bar" style="height:20%;background:var(--red)"></div></div>
+  <span class="rs-label lc-a">LEVEL</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-pads"><div class="rs-pad" style="background:var(--red)"></div><div class="rs-pad" style="background:var(--orange)"></div><div class="rs-pad" style="background:var(--yellow)"></div><div class="rs-pad" style="background:var(--aqua)"></div><div class="rs-pad" style="background:var(--aqua)"></div><div class="rs-pad" style="background:var(--yellow)"></div><div class="rs-pad" style="background:var(--orange)"></div><div class="rs-pad" style="background:var(--red)"></div></div>
+  <span class="rs-label lc-o">PADS</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-faders"><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:30%;background:var(--aqua)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:50%;background:var(--aqua)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:20%;background:var(--yellow)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:40%;background:var(--orange)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:15%;background:var(--red)"></div></div></div>
+  <span class="rs-label">MIX</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-speaker"><div class="rs-spk-cone"><i></i></div><div class="rs-spk-tw"></div></div>
+  <div class="rs-led lr"></div>
+</div>
+
+<!-- ÍNDICE -->
+<section class="toc-section">
+  <h2 class="toc-title">Contenidos</h2>
+  <div class="toc-grid">
+    <div class="toc-item"><span class="toc-num">01</span><span class="toc-text">Requisitos Previos</span></div>
+    <div class="toc-item"><span class="toc-num">02</span><span class="toc-text">Conexión MIDI</span></div>
+    <div class="toc-item"><span class="toc-num">03</span><span class="toc-text">Parts (Partes)</span></div>
+    <div class="toc-item"><span class="toc-num">04</span><span class="toc-text">Piano Roll</span></div>
+    <div class="toc-item"><span class="toc-num">05</span><span class="toc-text">Generación de Patrones</span></div>
+    <div class="toc-item"><span class="toc-num">06</span><span class="toc-text">Herramientas de Edición</span></div>
+    <div class="toc-item"><span class="toc-num">07</span><span class="toc-text">Panel de CC</span></div>
+    <div class="toc-item"><span class="toc-num">08</span><span class="toc-text">Panel LFO</span></div>
+    <div class="toc-item"><span class="toc-num">09</span><span class="toc-text">Transporte y Sincronización</span></div>
+    <div class="toc-item"><span class="toc-num">10</span><span class="toc-text">MFX (Master Effects)</span></div>
+    <div class="toc-item"><span class="toc-num">11</span><span class="toc-text">Estilos de Generación</span></div>
+    <div class="toc-item"><span class="toc-num">12</span><span class="toc-text">Voiceings de Acordes</span></div>
+    <div class="toc-item"><span class="toc-num">13</span><span class="toc-text">Groove y Swing</span></div>
+    <div class="toc-item"><span class="toc-num">14</span><span class="toc-text">Presets y Exportación</span></div>
+    <div class="toc-item"><span class="toc-num">15</span><span class="toc-text">Versión Móvil</span></div>
+    <div class="toc-item"><span class="toc-num">16</span><span class="toc-text">Atajos de Teclado</span></div>
+    <div class="toc-item"><span class="toc-num">17</span><span class="toc-text">Solución de Problemas</span></div>
+  </div>
+</section>
+
+<!-- ══ STRIP B: Faders + Knobs ══ -->
+<div class="rack-strip page-break" aria-hidden="true">
+  <div class="rs-led lo"></div>
+  <div class="rs-mod rs-faders"><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:45%;background:var(--aqua)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:25%;background:var(--yellow)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:55%;background:var(--orange)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:35%;background:var(--red)"></div></div></div>
+  <span class="rs-label lc-r">CH 1-4</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-knobs"><div class="rs-knob ky"></div><div class="rs-knob kb"></div><div class="rs-knob kp"></div></div>
+  <span class="rs-label">FILTER</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-vu"><div class="rs-bar" style="height:45%;background:var(--aqua)"></div><div class="rs-bar" style="height:70%;background:var(--yellow)"></div><div class="rs-bar" style="height:90%;background:var(--orange)"></div><div class="rs-bar" style="height:55%;background:var(--red)"></div></div>
+  <span class="rs-label lc-y">OUT</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-knobs"><div class="rs-knob ko"></div><div class="rs-knob ka"></div><div class="rs-knob kr"></div><div class="rs-knob ky"></div></div>
+  <span class="rs-label">SYNTH</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-pads"><div class="rs-pad" style="background:var(--aqua)"></div><div class="rs-pad" style="background:var(--blue)"></div><div class="rs-pad" style="background:var(--purple)"></div><div class="rs-pad" style="background:var(--orange)"></div><div class="rs-pad" style="background:var(--yellow)"></div><div class="rs-pad" style="background:var(--red)"></div><div class="rs-pad" style="background:var(--aqua)"></div><div class="rs-pad" style="background:var(--blue)"></div></div>
+  <div class="rs-led lg"></div>
+</div>
+
+<!-- 01 -->
+<section>
+  <div class="section-header"><h2>01 · Requisitos Previos</h2><p>Todo lo que necesitás para empezar</p></div>
+  <div class="section-box"><h3>Archivo Único</h3><p>La aplicación es un <strong>archivo HTML único</strong> sin dependencias externas. No necesita conexión a internet, servidor web ni archivos adicionales. Simplemente hacé <strong>doble clic</strong> en el archivo para abrirlo en el navegador.</p></div>
+  <div class="section-box"><h3>Versión Móvil</h3><p>La versión móvil se ejecuta <strong>directamente desde GitHub</strong>. No necesita instalación ni configuración.</p><div class="callout callout-info"><strong>Enlace:</strong> <code>https://gallegherplus.github.io/hacktribe-controller/MOBILE.html</code></div><div class="callout callout-tip"><strong>Conexión MIDI:</strong> En Android, Web MIDI requiere <strong>HTTPS</strong>. GitHub Pages sirve por HTTPS.</div></div>
+  <div class="section-box"><h3>Versión Desktop</h3><p>La versión de escritorio se puede <strong>descargar al PC</strong> y usar de forma completamente standalone.</p><div class="callout callout-info"><strong>Modo Standalone:</strong><ul style="margin-top:8px"><li>Descargá el archivo <code>DESKTOP.html</code> y abrilo con doble clic</li><li>Usá el secuenciador y generador <strong>sin hardware</strong></li></ul></div><div class="callout callout-tip"><strong>Modo Conectado:</strong><ul style="margin-top:8px"><li>Conectá el Electribe por USB y seleccioná en <strong>MIDI Output</strong></li><li>Controlá el hardware en tiempo real</li></ul></div><div class="callout callout-warning"><strong>Modo Sync:</strong><ul style="margin-top:8px"><li>Creá proyectos y <strong>guardalos como archivos</strong></li><li>Exportá y <strong>pasalos al hardware</strong> después</li></ul></div></div>
+</section>
+
+<!-- ══ STRIP C: VU + Pads + Speaker ══ -->
+<div class="rack-strip page-break" aria-hidden="true">
+  <div class="rs-led lg"></div>
+  <div class="rs-mod rs-speaker"><div class="rs-spk-tw"></div><div class="rs-spk-cone"><i></i></div></div>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-vu"><div class="rs-bar" style="height:80%;background:var(--aqua)"></div><div class="rs-bar" style="height:60%;background:var(--aqua)"></div><div class="rs-bar" style="height:40%;background:var(--yellow)"></div><div class="rs-bar" style="height:25%;background:var(--orange)"></div><div class="rs-bar" style="height:15%;background:var(--red)"></div></div>
+  <span class="rs-label lc-a">L</span>
+  <div class="rs-mod rs-vu"><div class="rs-bar" style="height:70%;background:var(--aqua)"></div><div class="rs-bar" style="height:50%;background:var(--aqua)"></div><div class="rs-bar" style="height:35%;background:var(--yellow)"></div><div class="rs-bar" style="height:20%;background:var(--orange)"></div><div class="rs-bar" style="height:10%;background:var(--red)"></div></div>
+  <span class="rs-label lc-o">R</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-knobs"><div class="rs-knob ko"></div><div class="rs-knob ka"></div></div>
+  <span class="rs-label">CUT · RES</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-pads"><div class="rs-pad" style="background:var(--orange)"></div><div class="rs-pad" style="background:var(--red)"></div><div class="rs-pad" style="background:var(--aqua)"></div><div class="rs-pad" style="background:var(--yellow)"></div><div class="rs-pad" style="background:var(--purple)"></div><div class="rs-pad" style="background:var(--blue)"></div><div class="rs-pad" style="background:var(--red)"></div><div class="rs-pad" style="background:var(--orange)"></div></div>
+  <span class="rs-label lc-r">SEQ</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-speaker"><div class="rs-spk-cone"><i></i></div><div class="rs-spk-tw"></div></div>
+  <div class="rs-led lr"></div>
+</div>
+
+<!-- 02 -->
+<section>
+  <div class="section-header"><h2>02 · Conexión MIDI</h2><p>Conectá tu Electribe y empezá a controlar</p></div>
+  <div class="callout callout-danger"><strong>CRÍTICO — Driver KORG USB-MIDI (solo Windows):</strong> Debés instalar el driver KORG USB-MIDI. En Windows 11 (24H2+) NO instalar el driver KORG — usar el incluido en Windows.</div>
+  <div class="section-box"><h3>Paso a paso</h3><ol><li>Conecta el <strong>KORG Electribe</strong> por USB</li><li>Abre la app en <strong>Chrome, Edge u Opera</strong></li><li>Haz <strong>clic en cualquier lugar</strong> para inicializar MIDI</li><li>Selecciona el dispositivo en <strong>MIDI Output</strong></li><li>El <strong>punto verde</strong> indica conexión OK</li></ol></div>
+  <div class="callout callout-warning"><strong>Importante:</strong> El Electribe debe estar en modo <strong>MIDI</strong> (no Storage).</div>
+  <div class="screenshot-wrap"><img src="img/desktop-full.png" alt="Interfaz completa"><p class="screenshot-caption">Interfaz completa — toolbar, partes y piano roll</p></div>
+  <div class="section-box"><h3>Interfaz de conexión</h3><table><tr><th>Elemento</th><th>Función</th></tr><tr><td><span class="badge badge-green">MIDI Output</span></td><td>Selecciona dispositivo de salida</td></tr><tr><td><span class="badge badge-green">MIDI Input</span></td><td>Selecciona dispositivo de entrada</td></tr><tr><td><span class="badge badge-green">↻</span></td><td>Re-escanea dispositivos</td></tr><tr><td><span class="badge badge-green">♪</span></td><td>Nota de prueba</td></tr><tr><td><span class="badge badge-green">●</span></td><td>Estado: verde = OK</td></tr></table></div>
+</section>
+
+<!-- ══ STRIP D: Synth style ══ -->
+<div class="rack-strip page-break" aria-hidden="true">
+  <div class="rs-led ly"></div>
+  <div class="rs-mod rs-knobs"><div class="rs-knob ko"></div><div class="rs-knob ko"></div><div class="rs-knob ka"></div><div class="rs-knob ka"></div></div>
+  <span class="rs-label lc-o">OSC</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-knobs"><div class="rs-knob kr"></div><div class="rs-knob ky"></div><div class="rs-knob kb"></div></div>
+  <span class="rs-label lc-r">MOD</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-faders"><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:20%;background:var(--orange)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:40%;background:var(--aqua)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:60%;background:var(--red)"></div></div></div>
+  <span class="rs-label">ENV</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-vu"><div class="rs-bar" style="height:90%;background:var(--aqua)"></div><div class="rs-bar" style="height:65%;background:var(--yellow)"></div><div class="rs-bar" style="height:40%;background:var(--orange)"></div><div class="rs-bar" style="height:25%;background:var(--red)"></div></div>
+  <span class="rs-label lc-a">AMP</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-knobs"><div class="rs-knob kp"></div><div class="rs-knob kb"></div></div>
+  <span class="rs-label">FX</span>
+  <div class="rs-led lo"></div>
+</div>
+
+<!-- 03 -->
+<section>
+  <div class="section-header"><h2>03 · Parts (Partes)</h2><p>16 canales MIDI independientes</p></div>
+  <div class="screenshot-wrap"><img src="img/desktop-parts.png" alt="Selector de partes"><p class="screenshot-caption">Selector de partes — 16 canales</p></div>
+  <p>La barra lateral muestra <strong>16 partes</strong> independientes. Cada parte es un canal MIDI separado.</p>
+  <div class="section-box"><h3>Controles por parte</h3><table><tr><th>Elemento</th><th>Función</th></tr><tr><td><span class="badge badge-green">Part 1–16</span></td><td>Selecciona parte</td></tr><tr><td><span class="badge badge-pink">_ / M</span></td><td>Mute</td></tr></table></div>
+  <h3>Configuración MIDI</h3>
+  <table><tr><th>Parámetro</th><th>Rango</th><th>Descripción</th></tr><tr><td><strong>Channel</strong></td><td>1–16</td><td>Canal MIDI</td></tr><tr><td><strong>Octave</strong></td><td>-3 a +3</td><td>Transposición</td></tr><tr><td><strong>Tone</strong></td><td>0–127</td><td>Tono</td></tr><tr><td><strong>Velocity</strong></td><td>0–127</td><td>Velocidad</td></tr><tr><td><strong>Note Length</strong></td><td>0–127</td><td>Duración</td></tr><tr><td><strong>Mute</strong></td><td>On/Off</td><td>Silenciar</td></tr><tr><td><strong>Solo</strong></td><td>On/Off</td><td>Solo esta parte</td></tr><tr><td><strong>Bank</strong></td><td>0–7</td><td>Banco</td></tr></table>
+  <div class="callout callout-tip"><strong>Tip:</strong> Al cambiar parte se guardan automáticamente: pasos, grilla, swing, CCs, LFOs y MFX.</div>
+</section>
+
+<!-- ══ STRIP E: Mixer style ══ -->
+<div class="rack-strip page-break" aria-hidden="true">
+  <div class="rs-led lg"></div>
+  <div class="rs-mod rs-faders"><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:25%;background:var(--aqua)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:35%;background:var(--aqua)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:45%;background:var(--aqua)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:30%;background:var(--aqua)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:55%;background:var(--yellow)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:40%;background:var(--yellow)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:20%;background:var(--orange)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:15%;background:var(--red)"></div></div></div>
+  <span class="rs-label">1 2 3 4 5 6 7 M</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-vu"><div class="rs-bar" style="height:75%;background:var(--aqua)"></div><div class="rs-bar" style="height:55%;background:var(--yellow)"></div><div class="rs-bar" style="height:35%;background:var(--orange)"></div><div class="rs-bar" style="height:18%;background:var(--red)"></div></div>
+  <div class="rs-mod rs-vu"><div class="rs-bar" style="height:65%;background:var(--aqua)"></div><div class="rs-bar" style="height:48%;background:var(--yellow)"></div><div class="rs-bar" style="height:30%;background:var(--orange)"></div><div class="rs-bar" style="height:12%;background:var(--red)"></div></div>
+  <span class="rs-label lc-a">L</span>
+  <span class="rs-label lc-o">R</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-knobs"><div class="rs-knob ko"></div><div class="rs-knob ka"></div><div class="rs-knob kr"></div></div>
+  <span class="rs-label">MASTER</span>
+  <div class="rs-led lr"></div>
+</div>
+
+<!-- 04 -->
+<section>
+  <div class="section-header"><h2>04 · Piano Roll</h2><p>Editor de patrones: 32 compases × 128 notas</p></div>
+  <div class="screenshot-wrap"><img src="img/desktop-pianoroll.png" alt="Piano Roll"><p class="screenshot-caption">Piano Roll — clic para crear, arrastrar para mover</p></div>
+  <h3>Grilla</h3>
+  <div class="grid-2">
+    <div class="section-box"><h4>Controles</h4><table><tr><th>Control</th><th>Valores</th></tr><tr><td><strong>Root</strong></td><td>C–B</td></tr><tr><td><strong>Scale</strong></td><td>Major, Minor, Dorian, etc.</td></tr><tr><td><strong>Lock</strong></td><td>ON/OFF escala</td></tr><tr><td><strong>Steps</strong></td><td>1–64</td></tr><tr><td><strong>Grid</strong></td><td>1/1 – 1/32</td></tr><tr><td><strong>Note Len</strong></td><td>0.25–16</td></tr></table></div>
+    <div class="section-box"><h4>Escalas</h4><table><tr><td>Major</td><td>Minor</td><td>Dorian</td></tr><tr><td>Phrygian</td><td>Lydian</td><td>Mixolydian</td></tr><tr><td>Pentatonic</td><td>Blues</td><td>Hijaz</td></tr><tr><td>Japanese</td><td>Arabic</td><td>Whole Tone</td></tr></table></div>
+  </div>
+  <h3>Edición</h3>
+  <div class="grid-2">
+    <div class="section-box"><h4>Mouse</h4><table><tr><th>Acción</th><th>Resultado</th></tr><tr><td>Clic vacío</td><td>Agrega nota</td></tr><tr><td>Clic nota</td><td>Selecciona</td></tr><tr><td>Arrastrar</td><td>Mueve</td></tr><tr><td>Shift+clic</td><td>Elimina</td></tr><tr><td>Clic derecho</td><td>Menú</td></tr></table></div>
+    <div class="section-box"><h4>Herramientas</h4><table><tr><th>Botón</th><th>Función</th></tr><tr><td><span class="badge badge-green">RND</span></td><td>Aleatorizar</td></tr><tr><td><span class="badge badge-green">CLR</span></td><td>Limpiar</td></tr><tr><td><span class="badge badge-green">OCT±</span></td><td>Transponer octava</td></tr><tr><td><span class="badge badge-green">CHD</span></td><td>Modo acorde</td></tr></table></div>
+  </div>
+</section>
+
+<!-- ══ STRIP F: Pads + Knobs themed ══ -->
+<div class="rack-strip page-break" aria-hidden="true">
+  <div class="rs-led lo"></div>
+  <div class="rs-mod rs-pads"><div class="rs-pad" style="background:var(--red)"></div><div class="rs-pad" style="background:var(--red)"></div><div class="rs-pad" style="background:var(--orange)"></div><div class="rs-pad" style="background:var(--orange)"></div><div class="rs-pad" style="background:var(--yellow)"></div><div class="rs-pad" style="background:var(--yellow)"></div><div class="rs-pad" style="background:var(--aqua)"></div><div class="rs-pad" style="background:var(--aqua)"></div></div>
+  <span class="rs-label lc-r">DRUM</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-knobs"><div class="rs-knob ko"></div><div class="rs-knob ky"></div><div class="rs-knob ka"></div><div class="rs-knob kr"></div><div class="rs-knob kb"></div><div class="rs-knob kp"></div></div>
+  <span class="rs-label">PARAM</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-vu"><div class="rs-bar" style="height:50%;background:var(--aqua)"></div><div class="rs-bar" style="height:85%;background:var(--aqua)"></div><div class="rs-bar" style="height:65%;background:var(--yellow)"></div><div class="rs-bar" style="height:40%;background:var(--orange)"></div><div class="rs-bar" style="height:20%;background:var(--red)"></div></div>
+  <span class="rs-label lc-a">VU</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-speaker"><div class="rs-spk-tw"></div><div class="rs-spk-cone"><i></i></div></div>
+  <div class="rs-led lg"></div>
+</div>
+
+<!-- 05 -->
+<section>
+  <div class="section-header"><h2>05 · Generación de Patrones</h2><p>El corazón creativo del controlador</p></div>
+  <p>Seleccioná un estilo, ajustá los parámetros y tocá <strong>Generate</strong>.</p>
+  <div class="section-box"><h3>Controles</h3><table><tr><th>Control</th><th>Función</th></tr><tr><td><span class="badge badge-blue">Style</span></td><td>Estilo musical</td></tr><tr><td><span class="badge badge-green">GEN</span></td><td>Genera patrón</td></tr><tr><td><span class="badge badge-orange">MUT</span></td><td>Muta notas</td></tr><tr><td><span class="badge badge-blue">Mono/Poly</span></td><td>Mono vs acordes</td></tr></table></div>
+  <h3>Parámetros</h3>
+  <table><tr><th>Parámetro</th><th>Rango</th><th>Descripción</th></tr><tr><td><strong>Density</strong></td><td>0–100%</td><td>Probabilidad de notas</td></tr><tr><td><strong>Octave Range</strong></td><td>1–4</td><td>Rango de octavas</td></tr><tr><td><strong>Note Length</strong></td><td>0.25–4</td><td>Duración base</td></tr><tr><td><strong>Velocity</strong></td><td>0–127</td><td>Velocidad base</td></tr><tr><td><strong>Swing</strong></td><td>0–100%</td><td>Cantidad de swing</td></tr><tr><td><strong>Syncopation</strong></td><td>0–100%</td><td>Sincopación</td></tr></table>
+  <div class="callout callout-tip"><strong>Tip:</strong> La generación es determinista — mismos parámetros = mismo resultado.</div>
+</section>
+
+<!-- ══ STRIP G: MFX style ══ -->
+<div class="rack-strip page-break" aria-hidden="true">
+  <div class="rs-led lr"></div>
+  <div class="rs-mod rs-knobs"><div class="rs-knob kp"></div><div class="rs-knob kp"></div></div>
+  <span class="rs-label lc-r">MFX X·Y</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-pads"><div class="rs-pad" style="background:var(--purple)"></div><div class="rs-pad" style="background:var(--blue)"></div><div class="rs-pad" style="background:var(--purple)"></div><div class="rs-pad" style="background:var(--blue)"></div><div class="rs-pad" style="background:var(--blue)"></div><div class="rs-pad" style="background:var(--purple)"></div><div class="rs-pad" style="background:var(--blue)"></div><div class="rs-pad" style="background:var(--purple)"></div></div>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-faders"><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:30%;background:var(--purple)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:50%;background:var(--blue)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:20%;background:var(--purple)"></div></div></div>
+  <span class="rs-label">DEPTH</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-vu"><div class="rs-bar" style="height:60%;background:var(--purple)"></div><div class="rs-bar" style="height:85%;background:var(--blue)"></div><div class="rs-bar" style="height:45%;background:var(--purple)"></div><div class="rs-bar" style="height:30%;background:var(--blue)"></div></div>
+  <span class="rs-label lc-a">LFO</span>
+  <div class="rs-led lg"></div>
+</div>
+
+<!-- 06 -->
+<section>
+  <div class="section-header"><h2>06 · Herramientas de Edición</h2><p>Transformá tus notas con herramientas profesionales</p></div>
+  <div class="screenshot-wrap"><img src="img/desktop-tools-dropdown.png" alt="Menú de herramientas"><p class="screenshot-caption">Menú de herramientas</p></div>
+  <h3>Quantize</h3><div class="section-box no-break"><p>Alinea notas a la cuadrícula.</p><table><tr><th>Opción</th><th>Descripción</th></tr><tr><td><strong>Grid</strong></td><td>1/4, 1/8, 1/16, 1/32</td></tr><tr><td><strong>Strength</strong></td><td>0–100%</td></tr><tr><td><strong>Scope</strong></td><td>Selected / All</td></tr></table></div>
+  <h3>Strum · Arpegiate · Chopper · Flam</h3>
+  <div class="grid-2">
+    <div class="section-box no-break"><h4>Strum</h4><p>Efecto rasgueo. <strong>Delay:</strong> 1–50 ms · <strong>Dir:</strong> Up/Down/Random</p></div>
+    <div class="section-box no-break"><h4>Arpegiate</h4><p>Acordes → arpegios. <strong>Pattern:</strong> Up, Down, UpDown, Random · <strong>Rate:</strong> 1/4–1/16</p></div>
+    <div class="section-box no-break"><h4>Chopper</h4><p>Fragmenta notas largas. <strong>Divisions</strong> + <strong>Gate %</strong></p></div>
+    <div class="section-box no-break"><h4>Flam</h4><p>Nota previa corta. <strong>Delay ms</strong> + <strong>Velocity</strong></p></div>
+  </div>
+  <h3>Humanize</h3><div class="section-box no-break"><table><tr><th>Parámetro</th><th>Rango</th></tr><tr><td><strong>Velocity Pct</strong></td><td>0–100%</td></tr><tr><td><strong>Timing Pct</strong></td><td>0–100%</td></tr></table></div>
+  <div class="callout callout-tip"><strong>Tip:</strong> Quantize después de grabar. Humanize al final como toque sutil.</div>
+</section>
+
+<!-- ══ STRIP H: Output style ══ -->
+<div class="rack-strip page-break" aria-hidden="true">
+  <div class="rs-led lg"></div>
+  <div class="rs-mod rs-speaker"><div class="rs-spk-tw"></div><div class="rs-spk-cone"><i></i></div></div>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-knobs"><div class="rs-knob ko"></div><div class="rs-knob ka"></div><div class="rs-knob kr"></div></div>
+  <span class="rs-label">LOW MID HI</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-faders"><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:28%;background:var(--aqua)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:42%;background:var(--yellow)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:18%;background:var(--red)"></div></div></div>
+  <span class="rs-label lc-y">OUTPUT</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-vu"><div class="rs-bar" style="height:88%;background:var(--aqua)"></div><div class="rs-bar" style="height:70%;background:var(--aqua)"></div><div class="rs-bar" style="height:50%;background:var(--yellow)"></div><div class="rs-bar" style="height:30%;background:var(--orange)"></div><div class="rs-bar" style="height:12%;background:var(--red)"></div></div>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-speaker"><div class="rs-spk-cone"><i></i></div><div class="rs-spk-tw"></div></div>
+  <div class="rs-led lr"></div>
+</div>
+
+<!-- 07 -->
+<section>
+  <div class="section-header"><h2>07 · Panel de CC</h2><p>Control en tiempo real del Electribe</p></div>
+  <p>Cada slider controla un parámetro. Todos los valores son <strong>por parte</strong>.</p>
+  <table><tr><th>Parámetro</th><th>CC</th><th>Rango</th></tr><tr><td>Filter Cutoff</td><td><span class="badge badge-blue">74</span></td><td>0–127</td></tr><tr><td>Filter Resonance</td><td><span class="badge badge-blue">71</span></td><td>0–127</td></tr><tr><td>EG Attack</td><td><span class="badge badge-blue">73</span></td><td>0–127</td></tr><tr><td>EG Decay</td><td><span class="badge badge-blue">72</span></td><td>0–127</td></tr><tr><td>Osc Pitch</td><td><span class="badge badge-blue">80</span></td><td>0–127</td></tr><tr><td>Mod Depth</td><td><span class="badge badge-blue">85</span></td><td>0–127</td></tr><tr><td>Amp Level</td><td><span class="badge badge-blue">7</span></td><td>0–127</td></tr><tr><td>Amp Pan</td><td><span class="badge badge-blue">10</span></td><td>0–127</td></tr><tr><td>MFX X</td><td><span class="badge badge-pink">102</span></td><td>0–127</td></tr><tr><td>MFX Y</td><td><span class="badge badge-pink">103</span></td><td>0–127</td></tr><tr><td>MFX Send</td><td><span class="badge badge-pink">105</span></td><td>0/127</td></tr><tr><td>MFX On</td><td><span class="badge badge-pink">106</span></td><td>0/127</td></tr></table>
+</section>
+
+<!-- ══ STRIP I ══ -->
+<div class="rack-strip page-break" aria-hidden="true">
+  <div class="rs-led ly"></div>
+  <div class="rs-mod rs-pads"><div class="rs-pad" style="background:var(--aqua)"></div><div class="rs-pad" style="background:var(--aqua)"></div><div class="rs-pad" style="background:var(--yellow)"></div><div class="rs-pad" style="background:var(--yellow)"></div><div class="rs-pad" style="background:var(--orange)"></div><div class="rs-pad" style="background:var(--orange)"></div><div class="rs-pad" style="background:var(--red)"></div><div class="rs-pad" style="background:var(--red)"></div></div>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-knobs"><div class="rs-knob ka"></div><div class="rs-knob ko"></div><div class="rs-knob kr"></div><div class="rs-knob ky"></div><div class="rs-knob kb"></div></div>
+  <span class="rs-label">LFO RATE · DEPTH · DEST · MIN · MAX</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-vu"><div class="rs-bar" style="height:55%;background:var(--aqua)"></div><div class="rs-bar" style="height:75%;background:var(--yellow)"></div><div class="rs-bar" style="height:40%;background:var(--orange)"></div></div>
+  <div class="rs-led lg"></div>
+</div>
+
+<!-- 08 -->
+<section>
+  <div class="section-header"><h2>08 · Panel LFO</h2><p>8 LFOs independientes por parte</p></div>
+  <div class="grid-2">
+    <div class="section-box"><h4>Header</h4><table><tr><th>Control</th><th>Función</th></tr><tr><td><span class="badge badge-green">ON/OFF</span></td><td>Activa LFO</td></tr><tr><td><span class="badge badge-blue">Forma</span></td><td>Sin, Tri, Saw, Sq, S&H</td></tr><tr><td><span class="badge badge-pink">X / Y</span></td><td>Asigna a MFX</td></tr></table></div>
+    <div class="section-box"><h4>Parámetros</h4><table><tr><th>Control</th><th>Función</th></tr><tr><td><strong>Rate</strong></td><td>16:1 → 1/32</td></tr><tr><td><strong>Depth</strong></td><td>0–100%</td></tr><tr><td><strong>Dest</strong></td><td>CC destino</td></tr><tr><td><strong>Min/Max</strong></td><td>0–127</td></tr></table></div>
+  </div>
+  <div class="callout callout-danger"><strong>Un solo LFO por CC:</strong> El anterior se limpia automáticamente.</div>
+  <div class="callout callout-tip"><strong>MFX auto-enable:</strong> Al asignar MFX X/Y se activan MFX On + MFX Send.</div>
+</section>
+
+<!-- ══ STRIP J ══ -->
+<div class="rack-strip page-break" aria-hidden="true">
+  <div class="rs-led lg"></div>
+  <div class="rs-mod rs-speaker"><div class="rs-spk-tw"></div><div class="rs-spk-cone"><i></i></div></div>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-faders"><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:35%;background:var(--aqua)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:25%;background:var(--yellow)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:50%;background:var(--orange)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:15%;background:var(--red)"></div></div></div>
+  <span class="rs-label">TRANSPORT</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-knobs"><div class="rs-knob ko"></div><div class="rs-knob ka"></div></div>
+  <span class="rs-label lc-o">BPM · SWING</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-vu"><div class="rs-bar" style="height:70%;background:var(--aqua)"></div><div class="rs-bar" style="height:50%;background:var(--yellow)"></div><div class="rs-bar" style="height:30%;background:var(--red)"></div></div>
+  <div class="rs-mod rs-speaker"><div class="rs-spk-cone"><i></i></div><div class="rs-spk-tw"></div></div>
+  <div class="rs-led lr"></div>
+</div>
+
+<!-- 09 -->
+<section>
+  <div class="section-header"><h2>09 · Transporte y Sincronización</h2><p>Control de reproducción y MIDI sync</p></div>
+  <table><tr><th>Control</th><th>Atajo</th><th>Función</th></tr><tr><td><span class="badge badge-red">⏹</span></td><td><kbd>Esc</kbd></td><td>Stop</td></tr><tr><td><span class="badge badge-green">▶</span></td><td><kbd>Espacio</kbd></td><td>Play/Stop</td></tr><tr><td><span class="badge badge-pink">⏺</span></td><td><kbd>R</kbd></td><td>Record</td></tr><tr><td><span class="badge badge-blue">BPM</span></td><td>—</td><td>20–300</td></tr><tr><td><span class="badge badge-purple">Sync</span></td><td>—</td><td>Off/Master/Slave</td></tr></table>
+  <div class="grid-3">
+    <div class="section-box"><h4>🔴 Off</h4><p>Sin reloj MIDI.</p></div>
+    <div class="section-box"><h4>🟢 Master</h4><p>Envía Clock al Electribe.</p></div>
+    <div class="section-box"><h4>🔵 Slave</h4><p>Recibe Clock del Electribe.</p></div>
+  </div>
+</section>
+
+<!-- ══ STRIP K ══ -->
+<div class="rack-strip page-break" aria-hidden="true">
+  <div class="rs-led lo"></div>
+  <div class="rs-mod rs-knobs"><div class="rs-knob kp"></div><div class="rs-knob kp"></div></div>
+  <span class="rs-label lc-r">MFX</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-pads"><div class="rs-pad" style="background:var(--red)"></div><div class="rs-pad" style="background:var(--orange)"></div><div class="rs-pad" style="background:var(--yellow)"></div><div class="rs-pad" style="background:var(--aqua)"></div><div class="rs-pad" style="background:var(--blue)"></div><div class="rs-pad" style="background:var(--purple)"></div><div class="rs-pad" style="background:var(--aqua)"></div><div class="rs-pad" style="background:var(--red)"></div></div>
+  <span class="rs-label">STYLES</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-vu"><div class="rs-bar" style="height:40%;background:var(--aqua)"></div><div class="rs-bar" style="height:65%;background:var(--yellow)"></div><div class="rs-bar" style="height:85%;background:var(--orange)"></div><div class="rs-bar" style="height:50%;background:var(--red)"></div></div>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-faders"><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:30%;background:var(--aqua)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:45%;background:var(--orange)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:20%;background:var(--red)"></div></div></div>
+  <div class="rs-led lg"></div>
+</div>
+
+<!-- 10 -->
+<section>
+  <div class="section-header"><h2>10 · MFX (Master Effects)</h2><p>Control del pad XY</p></div>
+  <div class="section-box"><h3>Uso</h3><ol><li>Selecciona parte</li><li>Activa <span class="badge badge-pink">MFX</span></li><li>LFOs modulan CC 102 (X) y CC 103 (Y)</li></ol></div>
+  <div class="callout callout-warning"><strong>Requisito:</strong> MFX On + MFX Send deben estar activos. La app los activa automáticamente.</div>
+</section>
+
+<!-- 11 -->
+<section>
+  <div class="section-header"><h2>11 · Estilos de Generación</h2><p>18 estilos musicales</p></div>
+  <table><tr><th>Estilo</th><th>BPM</th><th>Características</th></tr><tr><td><strong>House</strong></td><td>124–128</td><td>Rítmica, 4 acordes</td></tr><tr><td><strong>Deep House</strong></td><td>118–124</td><td>Sparse, largos</td></tr><tr><td><strong>Techno</strong></td><td>130–140</td><td>Punchy, 2 acordes</td></tr><tr><td><strong>Trance</strong></td><td>136–145</td><td>Arpegios, 7ths</td></tr><tr><td><strong>DnB</strong></td><td>172–178</td><td>Sincopado</td></tr><tr><td><strong>Acid</strong></td><td>126–135</td><td>Every-step, octave jumps</td></tr><tr><td><strong>Ambient</strong></td><td>80–110</td><td>Sparse, 7ths largos</td></tr><tr><td><strong>Trap</strong></td><td>135–160</td><td>Sparse, octave jumps</td></tr><tr><td><strong>Jazz</strong></td><td>110–140</td><td>Walking bass, 7ths</td></tr><tr><td><strong>Funk</strong></td><td>100–115</td><td>Sincopado, ghosts</td></tr><tr><td><strong>Lo-Fi</strong></td><td>70–90</td><td>Sparse, swing</td></tr></table>
+</section>
+
+<!-- ══ STRIP L ══ -->
+<div class="rack-strip page-break" aria-hidden="true">
+  <div class="rs-led lg"></div>
+  <div class="rs-mod rs-knobs"><div class="rs-knob ko"></div><div class="rs-knob ka"></div><div class="rs-knob kr"></div></div>
+  <span class="rs-label">VOICING</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-pads"><div class="rs-pad" style="background:var(--orange)"></div><div class="rs-pad" style="background:var(--aqua)"></div><div class="rs-pad" style="background:var(--red)"></div><div class="rs-pad" style="background:var(--yellow)"></div><div class="rs-pad" style="background:var(--blue)"></div><div class="rs-pad" style="background:var(--purple)"></div><div class="rs-pad" style="background:var(--orange)"></div><div class="rs-pad" style="background:var(--aqua)"></div></div>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-faders"><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:22%;background:var(--aqua)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:38%;background:var(--yellow)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:55%;background:var(--orange)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:30%;background:var(--red)"></div></div></div>
+  <span class="rs-label lc-o">GROOVE</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-vu"><div class="rs-bar" style="height:72%;background:var(--aqua)"></div><div class="rs-bar" style="height:55%;background:var(--yellow)"></div><div class="rs-bar" style="height:35%;background:var(--orange)"></div><div class="rs-bar" style="height:18%;background:var(--red)"></div></div>
+  <div class="rs-led lr"></div>
+</div>
+
+<!-- 12 -->
+<section>
+  <div class="section-header"><h2>12 · Voiceings de Acordes</h2><p>Distribución de notas</p></div>
+  <table><tr><th>Voiceing</th><th>Descripción</th><th>Efecto</th></tr><tr><td><strong>Root</strong></td><td>Posición raíz</td><td>Estable</td></tr><tr><td><strong>1st Inv</strong></td><td>3ª en la base</td><td>Ligero</td></tr><tr><td><strong>2nd Inv</strong></td><td>5ª en la base</td><td>Flotante</td></tr><tr><td><strong>Open</strong></td><td>Alternas suben octava</td><td>Amplio</td></tr><tr><td><strong>Drop 2</strong></td><td>2ª más alta baja octava</td><td>Jazz</td></tr><tr><td><strong>Spread</strong></td><td>Cada nota su octava</td><td>Orquestal</td></tr></table>
+</section>
+
+<!-- 13 -->
+<section>
+  <div class="section-header"><h2>13 · Groove y Swing</h2><p>Timing y feel</p></div>
+  <table><tr><th>Preset</th><th>Swing</th></tr><tr><td><strong>None</strong></td><td>0%</td></tr><tr><td><strong>Swing</strong></td><td>20%</td></tr><tr><td><strong>Shuffle</strong></td><td>30%</td></tr><tr><td><strong>MPC 60</strong></td><td>22%</td></tr><tr><td><strong>MPC 3000</strong></td><td>18%</td></tr><tr><td><strong>Linn</strong></td><td>25%</td></tr></table>
+</section>
+
+<!-- ══ STRIP M ══ -->
+<div class="rack-strip page-break" aria-hidden="true">
+  <div class="rs-led lo"></div>
+  <div class="rs-mod rs-speaker"><div class="rs-spk-tw"></div><div class="rs-spk-cone"><i></i></div></div>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-knobs"><div class="rs-knob ko"></div><div class="rs-knob ka"></div><div class="rs-knob kr"></div><div class="rs-knob ky"></div></div>
+  <span class="rs-label">SAVE · LOAD · EXPORT · IMPORT</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-pads"><div class="rs-pad" style="background:var(--aqua)"></div><div class="rs-pad" style="background:var(--orange)"></div><div class="rs-pad" style="background:var(--red)"></div><div class="rs-pad" style="background:var(--yellow)"></div><div class="rs-pad" style="background:var(--purple)"></div><div class="rs-pad" style="background:var(--blue)"></div><div class="rs-pad" style="background:var(--aqua)"></div><div class="rs-pad" style="background:var(--orange)"></div></div>
+  <span class="rs-label lc-a">PRESETS</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-speaker"><div class="rs-spk-cone"><i></i></div><div class="rs-spk-tw"></div></div>
+  <div class="rs-led lg"></div>
+</div>
+
+<!-- 14 -->
+<section>
+  <div class="section-header"><h2>14 · Presets y Exportación</h2><p>Guardá y compartí proyectos</p></div>
+  <div class="grid-2">
+    <div class="section-box"><h4>Guardar</h4><ol><li>Panel Presets</li><li><kbd>+ SAVE</kbd></li><li>Nombre</li></ol></div>
+    <div class="section-box"><h4>Cargar</h4><ol><li>Panel Presets</li><li><kbd>LOAD</kbd></li></ol></div>
+  </div>
+  <table><tr><th>Función</th><th>Formato</th></tr><tr><td><strong>Export All</strong></td><td><code>.json</code></td></tr><tr><td><strong>Import All</strong></td><td><code>.json</code></td></tr><tr><td><strong>Export MIDI</strong></td><td><code>.mid</code></td></tr><tr><td><strong>Import MIDI</strong></td><td><code>.mid</code></td></tr></table>
+  <div class="callout callout-info"><strong>Auto-guardado:</strong> Cada 1.5 segundos.</div>
+</section>
+
+<!-- ══ STRIP N ══ -->
+<div class="rack-strip page-break" aria-hidden="true">
+  <div class="rs-led lg"></div>
+  <div class="rs-mod rs-pads"><div class="rs-pad" style="background:var(--aqua)"></div><div class="rs-pad" style="background:var(--yellow)"></div><div class="rs-pad" style="background:var(--orange)"></div><div class="rs-pad" style="background:var(--red)"></div><div class="rs-pad" style="background:var(--red)"></div><div class="rs-pad" style="background:var(--orange)"></div><div class="rs-pad" style="background:var(--yellow)"></div><div class="rs-pad" style="background:var(--aqua)"></div></div>
+  <span class="rs-label lc-a">TOUCH</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-knobs"><div class="rs-knob ko"></div><div class="rs-knob ka"></div><div class="rs-knob kr"></div></div>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-faders"><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:30%;background:var(--aqua)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:45%;background:var(--orange)"></div></div></div>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-vu"><div class="rs-bar" style="height:80%;background:var(--aqua)"></div><div class="rs-bar" style="height:60%;background:var(--yellow)"></div><div class="rs-bar" style="height:35%;background:var(--red)"></div></div>
+  <div class="rs-led lr"></div>
+</div>
+
+<!-- 15 -->
+<section>
+  <div class="section-header"><h2>15 · Versión Móvil</h2><p>Interfaz táctil</p></div>
+  <div class="screenshot-wrap"><img src="img/mobile-full.png" alt="Móvil"><p class="screenshot-caption">Versión móvil</p></div>
+  <div class="feature-grid">
+    <div class="feature-card"><div class="feature-card-icon">👆</div><div class="feature-card-title">Gestos</div><div class="feature-card-desc">Long-press, pinch, swipe</div></div>
+    <div class="feature-card"><div class="feature-card-icon">⛶</div><div class="feature-card-title">Fullscreen</div><div class="feature-card-desc">Maximizar editor</div></div>
+    <div class="feature-card"><div class="feature-card-icon">↪️</div><div class="feature-card-title">Auto-Scroll</div><div class="feature-card-desc">Sigue playhead</div></div>
+  </div>
+  <h3>Comparativa</h3>
+  <table class="comparison-table"><tr><th>Función</th><th>Desktop</th><th>Móvil</th></tr><tr><td>Chord voicing</td><td class="check">✓</td><td class="cross">✗</td></tr><tr><td>Velocity lane</td><td class="check">✓</td><td class="cross">✗</td></tr><tr><td>Touch gestures</td><td class="cross">✗</td><td class="check">✓</td></tr><tr><td>Auto-scroll</td><td class="cross">✗</td><td class="check">✓</td></tr></table>
+</section>
+
+<!-- ══ STRIP O ══ -->
+<div class="rack-strip page-break" aria-hidden="true">
+  <div class="rs-led ly"></div>
+  <div class="rs-mod rs-knobs"><div class="rs-knob ko"></div><div class="rs-knob ka"></div><div class="rs-knob kr"></div><div class="rs-knob ky"></div><div class="rs-knob kb"></div><div class="rs-knob kp"></div></div>
+  <span class="rs-label">SHORTCUTS</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-pads"><div class="rs-pad" style="background:var(--red)"></div><div class="rs-pad" style="background:var(--orange)"></div><div class="rs-pad" style="background:var(--yellow)"></div><div class="rs-pad" style="background:var(--aqua)"></div><div class="rs-pad" style="background:var(--blue)"></div><div class="rs-pad" style="background:var(--purple)"></div><div class="rs-pad" style="background:var(--orange)"></div><div class="rs-pad" style="background:var(--red)"></div></div>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-faders"><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:20%;background:var(--aqua)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:35%;background:var(--yellow)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:50%;background:var(--orange)"></div></div><div class="rs-fdr"><div class="rs-fdr-track"></div><div class="rs-fdr-handle" style="top:25%;background:var(--red)"></div></div></div>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-vu"><div class="rs-bar" style="height:65%;background:var(--aqua)"></div><div class="rs-bar" style="height:80%;background:var(--yellow)"></div><div class="rs-bar" style="height:45%;background:var(--orange)"></div><div class="rs-bar" style="height:25%;background:var(--red)"></div></div>
+  <div class="rs-led lg"></div>
+</div>
+
+<!-- 16 -->
+<section>
+  <div class="section-header"><h2>16 · Atajos de Teclado</h2><p>Referencia rápida</p></div>
+  <div class="grid-2">
+    <div class="section-box"><h3>Generales</h3><table><tr><th>Atajo</th><th>Función</th></tr><tr><td><kbd>Ctrl+Z</kbd></td><td>Deshacer</td></tr><tr><td><kbd>Ctrl+Y</kbd></td><td>Rehacer</td></tr><tr><td><kbd>Ctrl+C</kbd></td><td>Copiar</td></tr><tr><td><kbd>Ctrl+V</kbd></td><td>Pegar</td></tr><tr><td><kbd>Ctrl+A</kbd></td><td>Seleccionar todo</td></tr><tr><td><kbd>Supr</kbd></td><td>Eliminar</td></tr></table></div>
+    <div class="section-box"><h3>Modos</h3><table><tr><th>Atajo</th><th>Función</th></tr><tr><td><kbd>D</kbd></td><td>Draw</td></tr><tr><td><kbd>E</kbd></td><td>Erase</td></tr><tr><td><kbd>S</kbd></td><td>Select</td></tr><tr><td><kbd>M</kbd></td><td>Move</td></tr><tr><td><kbd>F</kbd></td><td>Fold</td></tr><tr><td><kbd>G</kbd></td><td>Ghost</td></tr></table></div>
+    <div class="section-box"><h3>Herramientas</h3><table><tr><th>Atajo</th><th>Función</th></tr><tr><td><kbd>Ctrl+Q</kbd></td><td>Quantize</td></tr><tr><td><kbd>Alt+S</kbd></td><td>Strum</td></tr><tr><td><kbd>Alt+A</kbd></td><td>Arpegiate</td></tr><tr><td><kbd>Alt+U</kbd></td><td>Chopper</td></tr><tr><td><kbd>Alt+F</kbd></td><td>Flam</td></tr></table></div>
+    <div class="section-box"><h3>Transporte</h3><table><tr><th>Atajo</th><th>Función</th></tr><tr><td><kbd>Espacio</kbd></td><td>Play/Stop</td></tr><tr><td><kbd>Esc</kbd></td><td>Stop</td></tr><tr><td><kbd>R</kbd></td><td>Record</td></tr><tr><td><kbd>← →</kbd></td><td>Mover notas</td></tr><tr><td><kbd>↑ ↓</kbd></td><td>Semitono ±</td></tr></table></div>
+  </div>
+</section>
+
+<!-- ══ STRIP P ══ -->
+<div class="rack-strip page-break" aria-hidden="true">
+  <div class="rs-led lg"></div>
+  <div class="rs-mod rs-speaker"><div class="rs-spk-tw"></div><div class="rs-spk-cone"><i></i></div></div>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-knobs"><div class="rs-knob ko"></div><div class="rs-knob ka"></div><div class="rs-knob kr"></div></div>
+  <span class="rs-label">TROUBLESHOOT</span>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-vu"><div class="rs-bar" style="height:50%;background:var(--aqua)"></div><div class="rs-bar" style="height:70%;background:var(--yellow)"></div><div class="rs-bar" style="height:90%;background:var(--orange)"></div><div class="rs-bar" style="height:40%;background:var(--red)"></div></div>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-pads"><div class="rs-pad" style="background:var(--red)"></div><div class="rs-pad" style="background:var(--orange)"></div><div class="rs-pad" style="background:var(--yellow)"></div><div class="rs-pad" style="background:var(--aqua)"></div><div class="rs-pad" style="background:var(--aqua)"></div><div class="rs-pad" style="background:var(--yellow)"></div><div class="rs-pad" style="background:var(--orange)"></div><div class="rs-pad" style="background:var(--red)"></div></div>
+  <div class="rs-sep"></div>
+  <div class="rs-mod rs-speaker"><div class="rs-spk-cone"><i></i></div><div class="rs-spk-tw"></div></div>
+  <div class="rs-led lr"></div>
+</div>
+
+<!-- 17 -->
+<section>
+  <div class="section-header"><h2>17 · Solución de Problemas</h2><p>Problemas comunes</p></div>
+  <div class="grid-2">
+    <div class="section-box"><h3>PC</h3><table><tr><th>Problema</th><th>Solución</th></tr><tr><td>No conecta MIDI</td><td>Driver KORG, permisos, modo MIDI</td></tr><tr><td>Sin audio</td><td>Verificar volumen del sistema</td></tr><tr><td>Presets perdidos</td><td>localStorage preserva datos</td></tr><tr><td>Lentitud</td><td>Reducir densidad</td></tr></table></div>
+    <div class="section-box"><h3>Móvil</h3><table><tr><th>Problema</th><th>Solución</th></tr><tr><td>No USB</td><td>Cable OTG, permisos</td></tr><tr><td>Sin audio</td><td>Volumen dispositivo</td></tr><tr><td>Touch falla</td><td>Recargar página</td></tr><tr><td>Zoom accidental</td><td>Dos dedos</td></tr></table></div>
+  </div>
+  <h3>Consejos</h3>
+  <div class="section-box"><ul><li><strong>Ghost notes</strong> para coherencia entre partes</li><li><strong>Guardar presets</strong> frecuentemente</li><li><strong>Humanize al final</strong></li><li><strong>Snap to Scale</strong> para corregir notas</li><li><strong>Landscape en móvil</strong> para más espacio</li></ul></div>
+  <h3>MIDI Reference</h3>
+  <table><tr><th>Función</th><th>Mensaje</th></tr><tr><td>NoteOn</td><td><code>0x90 | ch, note, vel</code></td></tr><tr><td>NoteOff</td><td><code>0x80 | ch, note, 0</code></td></tr><tr><td>CC</td><td><code>0xB0 | ch, cc, val</code></td></tr><tr><td>Clock</td><td><code>0xF8</code></td></tr><tr><td>Transport</td><td><code>0xFA / 0xFC / 0xFB</code></td></tr></table>
+</section>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  <p>HackTribe Controller — Manual de Usuario v2.0</p>
+  <p>Creado por <strong>Gallegher Plus</strong></p>
+  <a href="https://gallegherplus.github.io/" target="_blank" rel="noopener noreferrer">gallegherplus.github.io</a>
+</footer>
+
+</main>
+</body>
+</html>
