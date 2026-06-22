@@ -1,134 +1,948 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HackTribe Controller</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #00cc66;
-            --primary-dark: #00a855;
-            --bg: #0a0a0f;
-            --surface: #16162a;
-            --border: #2a2a4a;
-            --fg: #e0e0e0;
-            --fg-muted: #888;
-            --font-headline: 'Space Grotesk', system-ui, sans-serif;
-            --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: var(--font-body);
-            background: var(--bg); 
-            color: var(--fg); 
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-        .logo { font-size: 3rem; margin-bottom: 0.5rem; }
-        h1 { 
-            font-family: var(--font-headline);
-            font-size: 2.8rem; 
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #00cc66, #00aaff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .subtitle { 
-            color: var(--fg-muted); 
-            margin-bottom: 3rem; 
-            font-size: 1.1rem;
-            text-align: center;
-            max-width: 500px;
-            line-height: 1.6;
-        }
-        .cards { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
-        .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 2rem;
-            width: 260px;
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.3s ease;
-        }
-        .card:hover { 
-            border-color: var(--primary); 
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,204,102,0.15);
-        }
-        .card-icon { font-size: 2rem; margin-bottom: 0.8rem; }
-        .card h2 { 
-            font-family: var(--font-headline);
-            font-size: 1.2rem; 
-            margin-bottom: 0.5rem; 
-            color: #fff; 
-        }
-        .card p { color: var(--fg-muted); font-size: 0.85rem; line-height: 1.5; }
-        .tag {
-            display: inline-block;
-            background: rgba(0,204,102,0.12);
-            color: var(--primary);
-            padding: 0.2rem 0.6rem;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            margin-top: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .tag-blue {
-            background: rgba(59,130,246,0.12);
-            color: #3b82f6;
-        }
-        .tag-purple {
-            background: rgba(168,85,247,0.12);
-            color: #a855f7;
-        }
-        footer {
-            margin-top: 3rem;
-            color: var(--fg-muted);
-            font-size: 0.8rem;
-            text-align: center;
-        }
-        footer a { color: var(--primary); text-decoration: none; }
-        footer a:hover { text-decoration: underline; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HackTribe Controller</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #09090b;
+      --surface: #111114;
+      --surface-2: #18181b;
+      --border: rgba(255,255,255,0.06);
+      --border-2: rgba(255,255,255,0.10);
+
+      --text: #f0ece4;
+      --text-2: #a1a1aa;
+      --text-3: #636370;
+
+      --accent: #e0e0e0;
+      --orange: #ff8c00;
+      --aqua: #00c9a0;
+      --red: #ff3050;
+      --yellow: #ffb830;
+
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { min-height: 100%; }
+
+    body {
+      font-family: var(--font);
+      color: var(--text);
+      background: var(--bg);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ========== GRID BACKGROUND ========== */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse at 50% 40%, black 20%, transparent 72%);
+      -webkit-mask-image: radial-gradient(ellipse at 50% 40%, black 20%, transparent 72%);
+    }
+
+    /* ========== MOBILE STRIP ========== */
+    .mobile-strip {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      overflow: hidden;
+      background: rgba(9,9,11,0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 0;
+    }
+
+    .scroll-inner {
+      display: flex;
+      width: max-content;
+      animation: marquee 32s linear infinite;
+    }
+
+    .strip-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 6px;
+    }
+
+    /* ========== DESKTOP RACKS ========== */
+    .rack-side {
+      position: fixed;
+      top: 0; bottom: 0;
+      width: 110px;
+      background: rgba(9,9,11,0.90);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 2;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 20px 8px;
+      pointer-events: none;
+    }
+
+    .rack-side.left  { left: 0;  border-right: 1px solid var(--border); }
+    .rack-side.right { right: 0; border-left: 1px solid var(--border); }
+
+    /* ========== MODULE BASE ========== */
+    .mod {
+      flex-shrink: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .rack-side .mod {
+      animation: modFloat 8s ease-in-out infinite;
+    }
+
+    .rack-side .mod:nth-child(2) { animation-delay: 1.2s; }
+    .rack-side .mod:nth-child(3) { animation-delay: 2.4s; }
+    .rack-side .mod:nth-child(4) { animation-delay: 3.6s; }
+
+    /* --- Speaker --- */
+    .mod-spk {
+      width: 88px;
+      height: 130px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-evenly;
+      padding: 8px;
+    }
+
+    .spk-tw {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 1.5px solid rgba(255,255,255,0.06);
+    }
+
+    .spk-wf {
+      width: 50px; height: 50px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 1.5px solid rgba(255,255,255,0.06);
+      display: grid;
+      place-items: center;
+    }
+
+    .spk-wf i {
+      display: block;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--surface-2);
+      animation: spkPulse 2s ease-in-out infinite;
+    }
+
+    .spk-slot {
+      width: 42px; height: 7px;
+      border-radius: 999px;
+      background: var(--bg);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .led {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      animation: ledPulse 2.2s infinite;
+    }
+
+    .led-g { background: var(--aqua); box-shadow: 0 0 8px rgba(0,201,160,0.5); }
+    .led-r { background: var(--red); box-shadow: 0 0 8px rgba(255,48,80,0.5); }
+    .led-o { background: var(--orange); box-shadow: 0 0 8px rgba(255,140,0,0.5); }
+
+    /* --- Knobs --- */
+    .mod-knobs {
+      width: 88px;
+      height: 72px;
+      padding: 8px 6px 6px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .knobs-row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .knob {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--surface-2);
+      position: relative;
+    }
+
+    .knob::after {
+      content: "";
+      position: absolute;
+      left: 50%; bottom: 50%;
+      width: 1.5px; height: 7px;
+      border-radius: 999px;
+      transform: translateX(-50%);
+      transform-origin: 50% 100%;
+      animation: knobRot 3.5s ease-in-out infinite alternate;
+    }
+
+    .knob:nth-child(2)::after { animation-delay: .6s; }
+    .knob:nth-child(3)::after { animation-delay: 1.2s; }
+
+    .knob.ko  { border: 1.5px solid var(--orange); }
+    .knob.ko::after { background: var(--orange); }
+    .knob.ka  { border: 1.5px solid var(--aqua); }
+    .knob.ka::after { background: var(--aqua); }
+    .knob.kr  { border: 1.5px solid var(--red); }
+    .knob.kr::after { background: var(--red); }
+
+    .knob-lbl {
+      display: flex;
+      justify-content: space-between;
+      font-size: 6px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .knob-lbl span:nth-child(1) { color: var(--orange); }
+    .knob-lbl span:nth-child(2) { color: var(--aqua); }
+    .knob-lbl span:nth-child(3) { color: var(--red); }
+
+    /* --- VU Meter --- */
+    .mod-vu {
+      width: 72px;
+      height: 110px;
+      padding: 6px 8px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .vu-title {
+      font-size: 6px;
+      text-align: center;
+      color: var(--text-3);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .vu-cols {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      align-items: flex-end;
+      padding-bottom: 6px;
+    }
+
+    .vu-c {
+      width: 12px;
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 3px;
+    }
+
+    .vu-c b {
+      display: block;
+      width: 100%;
+      border-radius: 2px;
+      opacity: 0.2;
+      animation: vuPop var(--d, .7s) ease-in-out infinite;
+    }
+
+    .vu-c b:nth-child(1) { animation-delay: .05s; }
+    .vu-c b:nth-child(2) { animation-delay: .12s; }
+    .vu-c b:nth-child(3) { animation-delay: .20s; }
+    .vu-c b:nth-child(4) { animation-delay: .28s; }
+    .vu-c b:nth-child(5) { animation-delay: .36s; }
+
+    .vu-g  { background: var(--aqua);   height: 12px; }
+    .vu-g2 { background: var(--aqua);   height: 12px; }
+    .vu-y  { background: var(--yellow); height: 12px; }
+    .vu-o  { background: var(--orange); height: 10px; }
+    .vu-r  { background: var(--red);    height: 8px;  }
+
+    .vu-lr {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      font-size: 8px;
+      font-weight: 700;
+    }
+
+    .vu-lr span:first-child { color: var(--aqua); }
+    .vu-lr span:last-child  { color: var(--orange); }
+
+    /* --- Pads --- */
+    .mod-pads {
+      width: 88px;
+      height: 86px;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .pad-display {
+      height: 16px;
+      border-radius: 6px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      font-size: 7px;
+      font-weight: 700;
+      color: var(--aqua);
+      letter-spacing: 0.14em;
+    }
+
+    .pad-g {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+    }
+
+    .pad-g s {
+      display: block;
+      text-decoration: none;
+      border-radius: 4px;
+      animation: padBlink 1.8s infinite;
+    }
+
+    .pad-g s:nth-child(1) { background: var(--red); }
+    .pad-g s:nth-child(2) { background: var(--orange); animation-delay: .2s; }
+    .pad-g s:nth-child(3) { background: var(--yellow); animation-delay: .4s; }
+    .pad-g s:nth-child(4) { background: var(--aqua); animation-delay: .6s; }
+    .pad-g s:nth-child(5) { background: var(--aqua); animation-delay: .8s; }
+    .pad-g s:nth-child(6) { background: var(--yellow); animation-delay: 1s; }
+    .pad-g s:nth-child(7) { background: var(--orange); animation-delay: 1.2s; }
+    .pad-g s:nth-child(8) { background: var(--red); animation-delay: 1.4s; }
+
+    /* --- Faders --- */
+    .mod-faders {
+      width: 88px;
+      height: 80px;
+      padding: 6px 5px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .fader-row {
+      flex: 1;
+      display: flex;
+      gap: 3px;
+    }
+
+    .fdr {
+      flex: 1;
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+
+    .fdr-track {
+      width: 3px;
+      height: 80%;
+      border-radius: 999px;
+      background: var(--bg);
+      align-self: center;
+    }
+
+    .fdr-handle {
+      position: absolute;
+      width: 72%;
+      height: 16%;
+      border-radius: 4px;
+      animation: faderSlide 2.4s ease-in-out infinite alternate;
+    }
+
+    .fdr:nth-child(2) .fdr-handle { animation-delay: .3s; }
+    .fdr:nth-child(3) .fdr-handle { animation-delay: .6s; }
+    .fdr:nth-child(4) .fdr-handle { animation-delay: .9s; }
+    .fdr:nth-child(5) .fdr-handle { animation-delay: 1.2s; }
+
+    .fdr-handle.ha { background: var(--aqua); }
+    .fdr-handle.hy { background: var(--yellow); }
+    .fdr-handle.ho { background: var(--orange); }
+    .fdr-handle.hr { background: var(--red); }
+
+    .fdr-lbl {
+      display: flex;
+      justify-content: space-between;
+      font-size: 6px;
+      color: var(--text-3);
+      padding: 0 1px;
+    }
+
+    /* ========== MAIN LAYOUT ========== */
+    .layout {
+      position: relative;
+      z-index: 5;
+      width: min(680px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: 96px 0 48px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ========== HERO ========== */
+    .hero {
+      text-align: center;
+      margin-bottom: 48px;
+      animation: fadeUp .7s var(--ease) both;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border-2);
+      background: var(--surface);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-2);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    .pulse-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--aqua);
+      animation: pulseDot 2s ease-in-out infinite;
+    }
+
+    .hero-icon {
+      width: 72px; height: 72px;
+      margin: 0 auto 22px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      font-size: 1.8rem;
+      background: var(--surface);
+      border: 1px solid var(--border-2);
+      animation: iconFloat 5s ease-in-out infinite;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--orange), var(--aqua), var(--red));
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradShift 6s linear infinite;
+    }
+
+    .desc {
+      color: var(--text-2);
+      font-size: 1rem;
+      line-height: 1.7;
+      max-width: 480px;
+      margin: 0 auto 24px;
+    }
+
+    /* Mini EQ in hero */
+    .eq-mini {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 5px;
+      height: 34px;
+      margin-bottom: 28px;
+    }
+
+    .eq-mini i {
+      display: block;
+      width: 5px;
+      border-radius: 999px 999px 1px 1px;
+      transform-origin: bottom;
+      animation: eqBounce var(--d, .5s) ease-in-out infinite alternate;
+    }
+
+    .eq-mini i:nth-child(1) { background: var(--aqua); }
+    .eq-mini i:nth-child(2) { background: var(--aqua); }
+    .eq-mini i:nth-child(3) { background: var(--yellow); }
+    .eq-mini i:nth-child(4) { background: var(--orange); }
+    .eq-mini i:nth-child(5) { background: var(--red); }
+    .eq-mini i:nth-child(6) { background: var(--red); }
+
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .pills span {
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--text-3);
+      border: 1px solid var(--border);
+      letter-spacing: 0.04em;
+    }
+
+    /* ========== CARDS ========== */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      animation: fadeUp .8s var(--ease) both;
+      animation-delay: .12s;
+    }
+
+    .card {
+      --c: var(--orange);
+      position: relative;
+      border-radius: 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 22px 18px 18px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease);
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -120%;
+      width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+      transform: skewX(-18deg);
+      transition: left .65s var(--ease);
+      pointer-events: none;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: color-mix(in srgb, var(--c) 30%, transparent);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.35), 0 0 0 1px color-mix(in srgb, var(--c) 10%, transparent);
+    }
+
+    .card:hover::after { left: 150%; }
+
+    .card-1 { --c: var(--orange); }
+    .card-2 { --c: var(--aqua); }
+    .card-3 { --c: var(--red); }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .c-icon {
+      width: 46px; height: 46px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 1.3rem;
+      background: color-mix(in srgb, var(--c) 8%, var(--surface));
+      border: 1px solid color-mix(in srgb, var(--c) 18%, var(--border));
+      transition: transform .3s var(--ease);
+    }
+
+    .card:hover .c-icon { transform: rotate(-4deg) scale(1.05); }
+
+    .c-led {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--c);
+      box-shadow: 0 0 6px color-mix(in srgb, var(--c) 45%, transparent);
+      animation: ledPulse 2s infinite;
+    }
+
+    .card h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      color: var(--text-2);
+      font-size: 0.86rem;
+      line-height: 1.65;
+      flex-grow: 1;
+    }
+
+    .c-eq {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 22px;
+      margin: 14px 0;
+    }
+
+    .c-eq i {
+      display: block;
+      width: 4px;
+      border-radius: 999px 999px 1px 1px;
+      background: var(--c);
+      opacity: 0.7;
+      transform-origin: bottom;
+      animation: eqBounce var(--d, .5s) ease-in-out infinite alternate;
+    }
+
+    .c-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .c-tag {
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--c);
+      background: color-mix(in srgb, var(--c) 10%, transparent);
+      border: 1px solid color-mix(in srgb, var(--c) 20%, transparent);
+    }
+
+    .c-open {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-3);
+      transition: color .25s;
+    }
+
+    .card:hover .c-open { color: var(--c); }
+
+    /* ========== FOOTER ========== */
+    footer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+      color: var(--text-3);
+      font-size: 0.85rem;
+      margin-top: 52px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    footer p {
+      color: var(--text-2);
+    }
+
+    footer a {
+      color: var(--aqua);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      transition: color 0.2s ease;
+    }
+
+    footer a:hover { 
+      color: var(--orange);
+      text-decoration: underline; 
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (min-width: 1024px) {
+      .mobile-strip { display: none; }
+      .rack-side { display: flex; }
+
+      .layout {
+        width: min(680px, calc(100% - 280px));
+        padding-top: 48px;
+      }
+    }
+
+    @media (min-width: 1280px) {
+      .rack-side { width: 130px; }
+      .rack-side .mod-spk   { width: 100px; height: 148px; }
+      .rack-side .mod-knobs { width: 100px; height: 80px; }
+      .rack-side .mod-vu    { width: 80px;  height: 122px; }
+      .rack-side .mod-pads  { width: 100px; height: 96px; }
+      .rack-side .mod-faders{ width: 100px; height: 90px; }
+    }
+
+    @media (max-width: 1023px) {
+      .layout { padding-top: 80px; }
+    }
+
+    @media (max-width: 768px) {
+      .cards { grid-template-columns: 1fr; max-width: 380px; margin: 0 auto; }
+      .card p { min-height: auto; }
+    }
+
+    @media (max-width: 480px) {
+      .layout { width: calc(100% - 16px); padding-top: 74px; }
+      h1 { font-size: 2rem; }
+      .desc { font-size: 0.92rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
+    /* ========== KEYFRAMES ========== */
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes gradShift {
+      0%   { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0,201,160,0.3); }
+      50%      { box-shadow: 0 0 0 6px rgba(0,201,160,0.02); }
+    }
+
+    @keyframes iconFloat {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-5px); }
+    }
+
+    @keyframes eqBounce {
+      from { height: 6px;  opacity: 0.4; }
+      to   { height: 22px; opacity: 1; }
+    }
+
+    @keyframes ledPulse {
+      0%, 100% { opacity: 0.4; filter: brightness(0.8); }
+      50%      { opacity: 1;   filter: brightness(1.4); }
+    }
+
+    @keyframes spkPulse {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.14); }
+    }
+
+    @keyframes knobRot {
+      0%   { transform: translateX(-50%) rotate(-40deg); }
+      100% { transform: translateX(-50%) rotate(30deg); }
+    }
+
+    @keyframes vuPop {
+      0%, 100% { opacity: 0.18; transform: scaleY(0.7); }
+      45%      { opacity: 1;    transform: scaleY(1.08); }
+    }
+
+    @keyframes padBlink {
+      0%, 100% { filter: brightness(0.55); transform: scale(1); }
+      50%      { filter: brightness(1.25); transform: scale(1.06); }
+    }
+
+    @keyframes faderSlide {
+      0%   { top: 55%; }
+      100% { top: 20%; }
+    }
+
+    @keyframes modFloat {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-5px); }
+    }
+  </style>
 </head>
 <body>
-    <div class="logo">🎛️</div>
-    <h1>HackTribe Controller</h1>
-    <p class="subtitle">Controlador web para el Korg Electribe E2-E2s-Hacktribe. Secuenciador, generador de estilos, arpegiador y más.</p>
-    <div class="cards">
-        <a class="card" href="DESKTOP.html">
-            <div class="card-icon">🖥️</div>
-            <h2>Escritorio</h2>
-            <p>Versión completa con todas las herramientas: piano roll, draw, fold, ghost notes, velocity lane, zoom, y más.</p>
-            <span class="tag">Web App</span>
-        </a>
-        <a class="card" href="MOBILE.html">
-            <div class="card-icon">📱</div>
-            <h2>Móvil</h2>
-            <p>Optimizada para tablets y smartphones. Gestos táctiles, auto-scroll, y pantalla completa.</p>
-            <span class="tag tag-blue">Mobile</span>
-        </a>
-        <a class="card" href="MANUAL.pdf">
-            <div class="card-icon">📖</div>
-            <h2>Manual</h2>
-            <p>Documentación completa con capturas de pantalla, guías de uso y referencias.</p>
-            <span class="tag tag-purple">PDF</span>
-        </a>
+
+  <div class="bg-grid"></div>
+
+  <!-- ===== MOBILE STRIP ===== -->
+  <nav class="mobile-strip" aria-hidden="true">
+    <div class="scroll-inner">
+      <!-- Set 1 -->
+      <div class="strip-group">
+        <div class="mod mod-spk"><div class="spk-tw"></div><div class="spk-wf"><i></i></div><div class="spk-slot"></div><div class="led led-g"></div></div>
+        <div class="mod mod-knobs"><div class="knobs-row"><div class="knob ko"><span></span></div><div class="knob ka"><span></span></div><div class="knob kr"><span></span></div></div><div class="knob-lbl"><span>LOW</span><span>MID</span><span>HI</span></div></div>
+        <div class="mod mod-vu"><div class="vu-title">LEVEL</div><div class="vu-cols"><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div></div><div class="vu-lr"><span>L</span><span>R</span></div></div>
+        <div class="mod mod-pads"><div class="pad-display">HTB</div><div class="pad-g"><s></s><s></s><s></s><s></s><s></s><s></s><s></s><s></s></div></div>
+        <div class="mod mod-faders"><div class="fader-row"><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ha"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ha"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle hy"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ho"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle hr"></div></div></div><div class="fdr-lbl"><span>1</span><span>2</span><span>3</span><span>4</span><span>M</span></div></div>
+      </div>
+      <!-- Set 2 (duplicate for seamless loop) -->
+      <div class="strip-group">
+        <div class="mod mod-spk"><div class="spk-tw"></div><div class="spk-wf"><i></i></div><div class="spk-slot"></div><div class="led led-r"></div></div>
+        <div class="mod mod-knobs"><div class="knobs-row"><div class="knob ko"><span></span></div><div class="knob ka"><span></span></div><div class="knob kr"><span></span></div></div><div class="knob-lbl"><span>CUT</span><span>RES</span><span>MOD</span></div></div>
+        <div class="mod mod-vu"><div class="vu-title">OUT</div><div class="vu-cols"><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div></div><div class="vu-lr"><span>L</span><span>R</span></div></div>
+        <div class="mod mod-pads"><div class="pad-display">E2</div><div class="pad-g"><s></s><s></s><s></s><s></s><s></s><s></s><s></s><s></s></div></div>
+        <div class="mod mod-faders"><div class="fader-row"><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ha"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ha"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle hy"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ho"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle hr"></div></div></div><div class="fdr-lbl"><span>A</span><span>B</span><span>C</span><span>D</span><span>X</span></div></div>
+      </div>
+      <!-- Set 3 (duplicate) -->
+      <div class="strip-group">
+        <div class="mod mod-spk"><div class="spk-tw"></div><div class="spk-wf"><i></i></div><div class="spk-slot"></div><div class="led led-g"></div></div>
+        <div class="mod mod-knobs"><div class="knobs-row"><div class="knob ko"><span></span></div><div class="knob ka"><span></span></div><div class="knob kr"><span></span></div></div><div class="knob-lbl"><span>LOW</span><span>MID</span><span>HI</span></div></div>
+        <div class="mod mod-vu"><div class="vu-title">LEVEL</div><div class="vu-cols"><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div></div><div class="vu-lr"><span>L</span><span>R</span></div></div>
+        <div class="mod mod-pads"><div class="pad-display">HTB</div><div class="pad-g"><s></s><s></s><s></s><s></s><s></s><s></s><s></s><s></s></div></div>
+        <div class="mod mod-faders"><div class="fader-row"><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ha"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ha"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle hy"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ho"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle hr"></div></div></div><div class="fdr-lbl"><span>1</span><span>2</span><span>3</span><span>4</span><span>M</span></div></div>
+      </div>
+      <!-- Set 4 (duplicate) -->
+      <div class="strip-group">
+        <div class="mod mod-spk"><div class="spk-tw"></div><div class="spk-wf"><i></i></div><div class="spk-slot"></div><div class="led led-o"></div></div>
+        <div class="mod mod-knobs"><div class="knobs-row"><div class="knob ko"><span></span></div><div class="knob ka"><span></span></div><div class="knob kr"><span></span></div></div><div class="knob-lbl"><span>CUT</span><span>RES</span><span>MOD</span></div></div>
+        <div class="mod mod-vu"><div class="vu-title">OUT</div><div class="vu-cols"><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div></div><div class="vu-lr"><span>L</span><span>R</span></div></div>
+        <div class="mod mod-pads"><div class="pad-display">E2</div><div class="pad-g"><s></s><s></s><s></s><s></s><s></s><s></s><s></s><s></s></div></div>
+        <div class="mod mod-faders"><div class="fader-row"><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ha"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ha"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle hy"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ho"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle hr"></div></div></div><div class="fdr-lbl"><span>A</span><span>B</span><span>C</span><span>D</span><span>X</span></div></div>
+      </div>
     </div>
+  </nav>
+
+  <!-- ===== LEFT RACK ===== -->
+  <aside class="rack-side left" aria-hidden="true">
+    <div class="mod mod-spk"><div class="spk-tw"></div><div class="spk-wf"><i></i></div><div class="spk-slot"></div><div class="led led-g"></div></div>
+    <div class="mod mod-knobs"><div class="knobs-row"><div class="knob ko"><span></span></div><div class="knob ka"><span></span></div><div class="knob kr"><span></span></div></div><div class="knob-lbl"><span>LOW</span><span>MID</span><span>HI</span></div></div>
+    <div class="mod mod-vu"><div class="vu-title">LEVEL</div><div class="vu-cols"><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div></div><div class="vu-lr"><span>L</span><span>R</span></div></div>
+    <div class="mod mod-pads"><div class="pad-display">HTB</div><div class="pad-g"><s></s><s></s><s></s><s></s><s></s><s></s><s></s><s></s></div></div>
+  </aside>
+
+  <!-- ===== RIGHT RACK ===== -->
+  <aside class="rack-side right" aria-hidden="true">
+    <div class="mod mod-spk"><div class="spk-tw"></div><div class="spk-wf"><i></i></div><div class="spk-slot"></div><div class="led led-r"></div></div>
+    <div class="mod mod-faders"><div class="fader-row"><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ha"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ha"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle hy"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle ho"></div></div><div class="fdr"><div class="fdr-track"></div><div class="fdr-handle hr"></div></div></div><div class="fdr-lbl"><span>1</span><span>2</span><span>3</span><span>4</span><span>M</span></div></div>
+    <div class="mod mod-vu"><div class="vu-title">OUT</div><div class="vu-cols"><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div><div class="vu-c"><b class="vu-g"></b><b class="vu-g2"></b><b class="vu-y"></b><b class="vu-o"></b><b class="vu-r"></b></div></div><div class="vu-lr"><span>L</span><span>R</span></div></div>
+    <div class="mod mod-knobs"><div class="knobs-row"><div class="knob ko"><span></span></div><div class="knob ka"><span></span></div><div class="knob kr"><span></span></div></div><div class="knob-lbl"><span>CUT</span><span>RES</span><span>MOD</span></div></div>
+  </aside>
+
+  <!-- ===== CONTENT ===== -->
+  <main class="layout">
+    <header class="hero">
+      <div class="badge">
+        <span class="pulse-dot"></span>
+        Open Source · Web MIDI
+      </div>
+
+      <div class="hero-icon">🎛️</div>
+
+      <h1>HackTribe <em>Controller</em></h1>
+
+      <p class="desc">
+        Controlador web para Korg Electribe E2, E2s y Hacktribe.
+        Secuenciador, generador de estilos, arpegiador y herramientas visuales.
+      </p>
+
+      <div class="eq-mini" aria-hidden="true">
+        <i style="--d:.38s"></i>
+        <i style="--d:.68s"></i>
+        <i style="--d:.48s"></i>
+        <i style="--d:.58s"></i>
+        <i style="--d:.32s"></i>
+        <i style="--d:.78s"></i>
+      </div>
+
+      <div class="pills">
+        <span>Piano Roll</span>
+        <span>Draw</span>
+        <span>Ghost Notes</span>
+        <span>Velocity</span>
+        <span>Zoom</span>
+      </div>
+    </header>
+
+    <section class="cards">
+      <a class="card card-1" href="DESKTOP.html">
+        <div class="card-top">
+          <div class="c-icon">🖥️</div>
+          <div class="c-led"></div>
+        </div>
+        <h2>Escritorio</h2>
+        <p>Versión completa: piano roll, draw, fold, ghost notes, velocity lane, zoom y más.</p>
+        <div class="c-eq" aria-hidden="true">
+          <i style="--d:.34s"></i><i style="--d:.60s"></i><i style="--d:.46s"></i><i style="--d:.54s"></i><i style="--d:.38s"></i>
+        </div>
+        <div class="c-foot">
+          <span class="c-tag">Web App</span>
+          <span class="c-open">Abrir ↗</span>
+        </div>
+      </a>
+
+      <a class="card card-2" href="MOBILE.html">
+        <div class="card-top">
+          <div class="c-icon">📱</div>
+          <div class="c-led"></div>
+        </div>
+        <h2>Móvil</h2>
+        <p>Optimizada para tablets y smartphones. Gestos táctiles, auto-scroll y pantalla completa.</p>
+        <div class="c-eq" aria-hidden="true">
+          <i style="--d:.40s"></i><i style="--d:.72s"></i><i style="--d:.50s"></i><i style="--d:.64s"></i><i style="--d:.36s"></i>
+        </div>
+        <div class="c-foot">
+          <span class="c-tag">Mobile</span>
+          <span class="c-open">Abrir ↗</span>
+        </div>
+      </a>
+
+      <a class="card card-3" href="MANUAL.pdf">
+        <div class="card-top">
+          <div class="c-icon">📖</div>
+          <div class="c-led"></div>
+        </div>
+        <h2>Manual</h2>
+        <p>Documentación completa con capturas, guías de uso y referencias de cada módulo.</p>
+        <div class="c-eq" aria-hidden="true">
+          <i style="--d:.36s"></i><i style="--d:.66s"></i><i style="--d:.42s"></i><i style="--d:.58s"></i><i style="--d:.32s"></i>
+        </div>
+        <div class="c-foot">
+          <span class="c-tag">PDF</span>
+          <span class="c-open">Ver ↗</span>
+        </div>
+      </a>
+    </section>
+
     <footer>
-        <p>Creado por <a href="https://github.com/gallegherplus">gallegherplus</a></p>
+      <p>Creado por <strong>Gallegher Plus</strong></p>
+      <a href="https://gallegherplus.github.io/" target="_blank" rel="noopener noreferrer">
+        gallegherplus.github.io
+      </a>
     </footer>
+  </main>
+
 </body>
 </html>
