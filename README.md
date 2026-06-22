@@ -8,7 +8,7 @@ Secuenciador de notas y drums con piano roll interactivo, generador de patrones 
 
 ## Live Demo
 
-**[gallegherplus.github.io/hacktribe-controller](https://gallegherplus.github.io/hacktribe-controller/)**
+**[gallegherplus.github.io/hacktribe-controller](https://gallegherplus.github.io/hacktribe-controller/index.html)**
 
 ---
 
