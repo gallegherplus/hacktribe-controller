@@ -57,7 +57,7 @@ Secuenciador de notas y drums con piano roll interactivo, generador de patrones 
 |---------|-------------|------|
 | Desktop | Full features: piano roll, draw, fold, ghost notes, velocity lane, zoom | [DESKTOP.html](https://gallegherplus.github.io/hacktribe-controller/DESKTOP.html) |
 | Mobile | Optimized for tablets/phones: touch gestures, auto-scroll, fullscreen | [MOBILE.html](https://gallegherplus.github.io/hacktribe-controller/MOBILE.html) |
-| Manual | Complete documentation with screenshots and guides | [MANUAL.pdf](https://gallegherplus.github.io/hacktribe-controller/MANUAL.pdf) |
+| Manual | Complete documentation with screenshots and guides | [MANUAL.pdf](https://gallegherplus.github.io/hacktribe-controller/MANUAL.html) |
 
 ---
 
